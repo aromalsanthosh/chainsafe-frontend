@@ -4,37 +4,25 @@ import Footer from "../components/Footer";
 import Welcome from "../components/Welcome";
 import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Shop() {
-  let products = [
-    {
-      imageUrl:
-        "https://assets.gqindia.com/photos/5ef357a962970f1a2bdba9b4/16:9/pass/ios%2014%20features%20most%20interesting%20apple%20iphone%20wwdc%202020.jpg",
-      brand: "Apple",
-      model: "iPhone XR",
-      priceInEth: 0.0003,
-    },
-    {
-      imageUrl:
-        "https://images.samsung.com/is/image/samsung/assets/sg/smartphones/ux/slide-s21.jpg",
-      brand: "Samsung",
-      model: "Galaxy S21",
-      priceInEth: 0.0004,
-    },
-    {
-      imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/aSkTcu4re7Cz5BU4aVXvHK.jpg",
-      brand: "Xiaomi",
-      model: "Mi 11 Ultra",
-      priceInEth: 0.00035,
-    },
-    {
-      imageUrl: "https://images.news18.com/ibnlive/uploads/2021/10/vivo-x70-pro-plus-review-16330704123x2.jpeg",
-      brand: "Vivo",
-      model: "X70 Pro",
-      priceInEth: 0.00025,
-    },
-  ];
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://3.7.157.248:3000/api/products")
+      .then((res) => {
+        console.log(res.data);
+        setProductList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(productList);
+  }, []);
 
   return (
     <div>
@@ -47,15 +35,16 @@ export default function Shop() {
       <Wallet address="0x1234567890abcdef" balance="5.4321" />
       {/* products container responsive */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-        {products.map((product) => (
+        {productList.map((product) => (
           <ProductCard
-            key={product.model}
-            imageUrl={product.imageUrl}
+            key = {product.productId}
+            imageUrl={product.image}
             brand={product.brand}
             model={product.model}
-            priceInEth={product.priceInEth}
+            priceInEth={product.price}
           />
         ))}
+
       </div>
       <Footer />
     </div>
