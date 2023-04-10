@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar";
-import Welcome from "../components/hero";
+import Landing from "../components/hero";
 import Head from "next/head";
 import Footer from "../components/Footer";
 
@@ -12,7 +12,7 @@ export default function Home() {
       </Head>
       <Navbar />
       <div className="hero min-h-screen bg-base-200">
-        <Welcome />
+        <Landing />
       </div>
       <Footer />
     </div>
