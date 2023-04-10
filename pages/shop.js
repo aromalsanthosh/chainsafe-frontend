@@ -12,7 +12,7 @@ export default function Shop() {
 
   useEffect(() => {
     axios
-      .get("http://3.7.157.248:3000/api/products")
+      .get("https://chainsafe-server.onrender.com/api/products")
       .then((res) => {
         console.log(res.data);
         setProductList(res.data);
