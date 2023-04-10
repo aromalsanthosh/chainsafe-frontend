@@ -1,18 +1,20 @@
 import Navbar from "../components/Navbar";
-import Welcome from "../components/hero";
 import Head from "next/head";
 import Footer from "../components/Footer";
-
-export default function Home() {
+import Welcome from "../components/Welcome";
+import Wallet from "../components/Wallet";
+export default function Shop() {
   return (
     <div>
       <Head>
-        <title>ChainSafe | Home Page</title>
+        <title>ChainSafe | Shop</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Navbar />
+      <Welcome name="Aromal" />
+      <Wallet address="0x1234567890abcdef" balance="5.4321" />
       <div className="hero min-h-screen bg-base-200">
-        <Welcome />
+        Shop Page
       </div>
       <Footer />
     </div>
