@@ -17,14 +17,14 @@ export default function Home() {
   const [repairAccount, setRepairAccount] = useState("");
   const [insurance, setInsurance] = useState(null);
 
-  const handleClick = async (e) => {
+  useEffect(() => {
     const load = async () => {
       await loadWeb3();
       await getAllAccounts();
       await loadBlockchainData();
     };
     load();
-  }
+  }, []);
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts) {
