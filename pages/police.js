@@ -7,10 +7,16 @@ import { Table } from '@nextui-org/react';
 import { Button } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
+import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
+
 
 
 
 export default function Shop() {
+
+  const { setVisible, bindings } = useModal();
+
+
   return (
     <div>
       <Head>
@@ -21,6 +27,41 @@ export default function Shop() {
       <Welcome name="Police" />
       <Wallet address="0x1234567890abcdef" balance="5.4321" />
       <div className="p-5">
+        <Modal
+          blur
+          scroll
+          width="600px"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+          {...bindings}
+        >
+          <Modal.Header>
+            <Text id="modal-title" size={27} weight="bold">
+              Claim Details
+            </Text>
+          </Modal.Header>
+          <Modal.Body>
+            <Text size="$xl">Product Name : iPhone 13 Pro</Text>
+            <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
+            <Textarea
+              readOnly
+              label="Case Details"
+              initialValue="FIR NO : 123/2021"
+            />
+
+          </Modal.Body>
+          <Modal.Footer>
+            <Button auto flat color="error" onPress={() => setVisible(false)}>
+              Close
+            </Button>
+            <Button auto color="success" onPress={() => setVisible(false)}>
+              Approve
+            </Button>
+            <Button  auto color="error" onPress={() => setVisible(false)}>
+              Reject
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <Table
           aria-label="Example table with static content"
           css={{
@@ -44,7 +85,7 @@ export default function Shop() {
               <Table.Cell>
               <Grid.Container gap={1}>
                   <Grid>
-                    <Button flat color="primary" auto>
+                    <Button flat color="primary" auto onPress={() => setVisible(true)}>
                       View
                     </Button>
                   </Grid>
