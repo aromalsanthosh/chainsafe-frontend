@@ -20,8 +20,8 @@ export default function Home() {
   useEffect(() => {
     const load = async () => {
       await loadWeb3();
-      await getAllAccounts();
-      await loadBlockchainData();
+      await getAccountAndBalance(setAccount, setAccountBalance);
+      // await loadBlockchainData();
     };
     load();
   }, []);
@@ -46,9 +46,22 @@ export default function Home() {
     }
   };
 
+  const getAccountAndBalance = async (setAccount, setAccountBalance) => {
+    const web3 = new Web3(window.ethereum);
+    const accounts = await web3.eth.getAccounts();
+    setAccount(accounts[0]);
+
+    let accountBalance = await web3.eth.getBalance(accounts[0]);
+    accountBalance = web3.utils.fromWei(accountBalance, "ether");
+
+    setAccountBalance(accountBalance);
+  };
+
   const getAllAccounts = async () => {
     let web3 = new Web3(window.ethereum);
     const accounts = await web3.eth.getAccounts();
+    console.log(accounts);
+    setAccount(accounts);
     setSellerAccount("0x8491106ba7c7806577e216f8560e9f3d9ecc5ecd");
     setPoliceAccount("0x61c40bc0aa7d2aa1a89535c91ea7bc1762a76513");
     setRepairAccount("0x08e1767f49597f415dcb4faaf6af70a9f468b521");
@@ -229,14 +242,18 @@ export default function Home() {
                 Maximize Your Insurance Management <br></br>
                 with the Power of Blockchain
               </p>
-              <Link href="/">
-                <button
-                  id="#connectwallet"
-                  className="md:mr-6 mb-6 md:w-44 w-full btn btn-primary px-8 bg-primary normal-case font-normal rounded-none"
-                >
-                  Connect Wallet
-                </button>
-              </Link>
+              {/* <Link href="/"> */}
+              <button
+                id="#connectwallet"
+                className="md:mr-6 mb-6 md:w-44 w-full btn btn-primary px-8 bg-primary normal-case font-normal rounded-none"
+                onClick={async () => {
+                  await loadWeb3();
+                  await getAccountAndBalance(setAccount, setAccountBalance);
+                }}
+              >
+                Connect Wallet
+              </button>
+              {/* </Link> */}
             </div>
           </div>
         </div>
