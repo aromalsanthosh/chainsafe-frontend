@@ -1,0 +1,631 @@
+{
+    "abi": [
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "claimPolice",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "claimRepair",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "string",
+    "name": "_name",
+    "type": "string"
+    },
+    {
+    "internalType": "uint256",
+    "name": "_price",
+    "type": "uint256"
+    },
+    {
+    "internalType": "uint256",
+    "name": "_insurancePrice",
+    "type": "uint256"
+    }
+    ],
+    "name": "createProduct",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "string",
+    "name": "name",
+    "type": "string"
+    },
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "price",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "insurancePrice",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "address payable",
+    "name": "owner",
+    "type": "address"
+    },
+    {
+    "indexed": false,
+    "internalType": "address payable",
+    "name": "insuranceOwner",
+    "type": "address"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "purchased",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "insurancePurchased",
+    "type": "bool"
+    }
+    ],
+    "name": "InsurancePurchased",
+    "type": "event"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "notStolen",
+    "type": "bool"
+    }
+    ],
+    "name": "NotStolen",
+    "type": "event"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address payable",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "payRepairShop",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "claimedPolice",
+    "type": "bool"
+    }
+    ],
+    "name": "PoliceClaimed",
+    "type": "event"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "string",
+    "name": "name",
+    "type": "string"
+    },
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "price",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "insurancePrice",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "address payable",
+    "name": "owner",
+    "type": "address"
+    },
+    {
+    "indexed": false,
+    "internalType": "address payable",
+    "name": "insuranceOwner",
+    "type": "address"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "purchased",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "insurancePurchased",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "claimedPolice",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "claimedRepair",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "isStolen",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "isRepaired",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "isReimbursed",
+    "type": "bool"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "paidRepairShop",
+    "type": "bool"
+    }
+    ],
+    "name": "ProductCreated",
+    "type": "event"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "string",
+    "name": "name",
+    "type": "string"
+    },
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "price",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "insurancePrice",
+    "type": "uint256"
+    },
+    {
+    "indexed": false,
+    "internalType": "address payable",
+    "name": "owner",
+    "type": "address"
+    },
+    {
+    "indexed": false,
+    "internalType": "address payable",
+    "name": "insuranceOwner",
+    "type": "address"
+    },
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "purchased",
+    "type": "bool"
+    }
+    ],
+    "name": "ProductPurchased",
+    "type": "event"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "purchaseInsurance",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "purchaseProduct",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "reimburse",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "isReimbursed",
+    "type": "bool"
+    }
+    ],
+    "name": "Reimbursed",
+    "type": "event"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "claimedRepair",
+    "type": "bool"
+    }
+    ],
+    "name": "RepairClaimed",
+    "type": "event"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "repaired",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "paidRepairShop",
+    "type": "bool"
+    }
+    ],
+    "name": "RepairShopPaid",
+    "type": "event"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "isRepaired",
+    "type": "bool"
+    }
+    ],
+    "name": "Repaired",
+    "type": "event"
+    },
+    {
+    "constant": false,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "_id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address",
+    "name": "_repairShop",
+    "type": "address"
+    },
+    {
+    "internalType": "address",
+    "name": "_police",
+    "type": "address"
+    }
+    ],
+    "name": "stolen",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+    },
+    {
+    "anonymous": false,
+    "inputs": [
+    {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "isStolen",
+    "type": "bool"
+    }
+    ],
+    "name": "Stolen",
+    "type": "event"
+    },
+    {
+    "constant": true,
+    "inputs": [],
+    "name": "getProductCount",
+    "outputs": [
+    {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+    }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+    },
+    {
+    "constant": true,
+    "inputs": [],
+    "name": "productCount",
+    "outputs": [
+    {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+    }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+    },
+    {
+    "constant": true,
+    "inputs": [
+    {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+    }
+    ],
+    "name": "products",
+    "outputs": [
+    {
+    "internalType": "uint256",
+    "name": "id",
+    "type": "uint256"
+    },
+    {
+    "internalType": "string",
+    "name": "name",
+    "type": "string"
+    },
+    {
+    "internalType": "uint256",
+    "name": "price",
+    "type": "uint256"
+    },
+    {
+    "internalType": "uint256",
+    "name": "insurancePrice",
+    "type": "uint256"
+    },
+    {
+    "internalType": "address payable",
+    "name": "owner",
+    "type": "address"
+    },
+    {
+    "internalType": "address payable",
+    "name": "insuranceOwner",
+    "type": "address"
+    },
+    {
+    "internalType": "bool",
+    "name": "purchased",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "insurancePurchased",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "claimedPolice",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "claimedRepair",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "isStolen",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "isRepaired",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "isReimbursed",
+    "type": "bool"
+    },
+    {
+    "internalType": "bool",
+    "name": "paidRepairShop",
+    "type": "bool"
+    }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+    }
+    ]
+    }

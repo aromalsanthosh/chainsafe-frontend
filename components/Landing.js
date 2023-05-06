@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-function Welcome() {
+function Landing() {
   return (
     <div className="hero min-h-screen bg-base-200 ">
       <div className="flex-col hero-content lg:flex-row-reverse  p-0 w-screen ">
@@ -30,4 +30,4 @@ function Welcome() {
   );
 }
 
-export default Welcome;
+export default Landing;
