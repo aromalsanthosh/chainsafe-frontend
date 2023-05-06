@@ -7,6 +7,9 @@ import { useState, useEffect } from "react";
 import Insurance from "../abis/Insurance.json";
 import Wallet from "../components/Wallet";
 import Welcome from "../components/Welcome";
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
+
 
 export default function Home() {
   const [account, setAccount] = useState("");
@@ -18,6 +21,8 @@ export default function Home() {
   const [policeAccount, setPoliceAccount] = useState("");
   const [repairAccount, setRepairAccount] = useState("");
   const [insurance, setInsurance] = useState(null);
+  const [userId , setUserId] = useState(0);
+  const [userName , setUserName] = useState("");
 
   useEffect(() => {
     const load = async () => {
@@ -48,6 +53,11 @@ export default function Home() {
     }
   };
 
+  const generateRandomId = () => {
+    const randomId = uuidv4().split("-")[0];
+    return randomId.slice(0, 5);
+  };
+
   const getAccountAndBalance = async (setAccount, setAccountBalance) => {
     const web3 = new Web3(window.ethereum);
     const accounts = await web3.eth.getAccounts();
@@ -57,6 +67,34 @@ export default function Home() {
     accountBalance = web3.utils.fromWei(accountBalance, "ether");
 
     setAccountBalance(accountBalance);
+    const response = await axios.get(
+      `https://chainsafe-server.onrender.com/api/users?walletAddress=${accounts[0]}`
+    );
+  
+    if (response.data.length > 0) {
+      // User exists
+      const { userId, userName, walletAddress } = response.data[0];
+      // Store user data in states
+      setUserId(userId);
+      setUserName(userName);
+    } else {
+      // User does not exist, prompt for user name and add to the database
+      const userId = generateRandomId();
+      const userName = prompt("Enter your name:");
+      const walletAddress = accounts[0];
+  
+      // Add user to the database
+      await axios.post("https://chainsafe-server.onrender.com/api/addUser", {
+        userId,
+        userName,
+        walletAddress,
+      });
+  
+      // Store user data in states
+      // Replace the below lines with the appropriate state setters
+      setUserId(userId);
+      setUserName(userName);
+    }
   };
 
   const getAllAccounts = async () => {
@@ -227,7 +265,11 @@ export default function Home() {
       {/* <p>Connected Account: {account}</p>
       <p>Account Balance: {accountBalance}</p> */}
       {account ? (
+        <>
+        <Welcome name={userName} />
         <Wallet address={account} balance={accountBalance} />
+        </>
+        
       ) : (
         <div></div>
       )}
