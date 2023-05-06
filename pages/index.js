@@ -5,6 +5,8 @@ import Link from "next/link";
 import Web3 from "web3";
 import { useState, useEffect } from "react";
 import Insurance from "../abis/Insurance.json";
+import Wallet from "../components/Wallet";
+import Welcome from "../components/Welcome";
 
 export default function Home() {
   const [account, setAccount] = useState("");
@@ -222,8 +224,13 @@ export default function Home() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Navbar />
-      <p>Connected Account: {account}</p>
-      <p>Account Balance: {accountBalance}</p>
+      {/* <p>Connected Account: {account}</p>
+      <p>Account Balance: {accountBalance}</p> */}
+      {account ? (
+        <Wallet address={account} balance={accountBalance} />
+      ) : (
+        <div></div>
+      )}
       {/* if connected account is seller ,redirect to admin page */}
       <div className="hero min-h-screen bg-base-200">
         <div className="hero min-h-screen bg-base-200 ">
