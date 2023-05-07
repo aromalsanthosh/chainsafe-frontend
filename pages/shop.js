@@ -217,7 +217,7 @@ export default function Shop() {
           >
             <Table.Header>
               <Table.Column>Sl. No</Table.Column>
-              <Table.Column>CASE</Table.Column>
+              <Table.Column>PRODUCT</Table.Column>
               <Table.Column>DATE</Table.Column>
               <Table.Column>INSURANCE</Table.Column>
               <Table.Column>STATUS</Table.Column>
@@ -225,7 +225,7 @@ export default function Shop() {
             <Table.Body>
               <Table.Row key="1">
                 <Table.Cell>1</Table.Cell>
-                <Table.Cell>MacBook Pro - THEFT FIR : CHN-54/2023</Table.Cell>
+                <Table.Cell>MacBook Pro M2 2023 16/512GB</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button   color="primary" auto onPress={() => setVisible(true)}>
@@ -240,7 +240,7 @@ export default function Shop() {
               </Table.Row>
               <Table.Row key="2">
                 <Table.Cell>2</Table.Cell>
-                <Table.Cell>iPHONE - THEFT FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell>iPhone 14 Pro Max</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button  color="success" auto onPress={handleClaimInsurance} >
@@ -255,7 +255,7 @@ export default function Shop() {
               </Table.Row>
               <Table.Row key="3">
                 <Table.Cell>3</Table.Cell>
-                <Table.Cell>Bergamont Bicycle - THEFT FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell>Bergamont Bicycle </Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button bordered color="gradient" auto>
@@ -270,7 +270,7 @@ export default function Shop() {
               </Table.Row>
               <Table.Row key="4">
                 <Table.Cell>4</Table.Cell>
-                <Table.Cell>Nissan GTR - ACCIDENT FIR : CHN-124/2023</Table.Cell>
+                <Table.Cell>Nissan GTR R34</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button bordered color="gradient" auto>
@@ -285,7 +285,7 @@ export default function Shop() {
               </Table.Row>
               <Table.Row key="5">
                 <Table.Cell>5</Table.Cell>
-                <Table.Cell>Ather 450X Gen 3 - THEFT FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell>Ather 450X Gen 3 </Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button bordered color="gradient" auto>
@@ -300,7 +300,7 @@ export default function Shop() {
               </Table.Row>
               <Table.Row key="6">
                 <Table.Cell>6</Table.Cell>
-                <Table.Cell>OLA S1 PRO - THEFT FIR : CHN-1S253/2023</Table.Cell>
+                <Table.Cell>OLA S1 PRO </Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button bordered color="gradient" auto>
@@ -315,7 +315,7 @@ export default function Shop() {
               </Table.Row>
               <Table.Row key="7">
                 <Table.Cell>7</Table.Cell>
-                <Table.Cell>Atomberg Mixer Grinder - NOT WORKING FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell>Atomberg Mixer Grinder</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
                       <Button bordered color="gradient" auto>
