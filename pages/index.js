@@ -9,10 +9,12 @@ import Wallet from "../components/Wallet";
 import Welcome from "../components/Welcome";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { useRouter } from "next/router";
+
 
 
 export default function Home() {
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState(""); 
   const [productCount, setProductCount] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

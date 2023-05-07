@@ -6,11 +6,30 @@ import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Table } from '@nextui-org/react';
+import { Button } from "@nextui-org/react";
+import { Grid } from "@nextui-org/react";
+import { Badge } from "@nextui-org/react";
+import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
+
+
+
 
 export default function Shop() {
   const [productList, setProductList] = useState([]);
   // const [purchasedList, setPurchasedList] = useState([]);
   // hard coded for now
+  const { setVisible, bindings } = useModal();
+  // modal 2 for claim insurance
+  // const { setVisible, bindings2 } = useModal();
+  // const { setVisible2, bindings: bindings2 } = useModal();
+  const { setVisible: setClaimModalVisible, bindings: claimModalBindings } = useModal();
+
+  const handleClaimInsurance = () => {
+    setClaimModalVisible(true);
+  };
+
+
   const purchasedList = [
     {
       productId: 1,
@@ -80,17 +99,241 @@ export default function Shop() {
               priceInEth={product.price}
             />
           ))}
-        {activeTab === "purchased" &&
-          purchasedList.map((product) => (
-            <ProductCard
-              key={product.productId}
-              imageUrl={product.imageUrl}
-              brand={product.brand}
-              model={product.model}
-              priceInEth={product.price}
-            />
-          ))}
       </div>
+      {activeTab === "purchased" &&
+
+          <div className="p-5">
+          <Modal
+            blur
+            scroll
+            width="600px"
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+            {...bindings}
+          >
+            <Modal.Header>
+              <Text id="modal-title" size={27} weight="bold">
+                Buy Insurance
+              </Text>
+            </Modal.Header>
+            <Modal.Body>
+              <Text size="$xl">Product Name : iPhone 13 Pro</Text>
+              <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
+              {/* Start Date Picker */}
+              
+                  <Text size="$xl">Start Date : </Text> 
+                  <input
+                    type="date"
+                    className="input input-bordered"
+                    placeholder="Start Date"
+                  />
+                
+                  <Text size="$xl">End Date :</Text>
+                  <input
+                    type="date"
+                    className="input input-bordered"
+                    placeholder="End Date"
+                  />
+                  {/* Cost per day */}
+                  <Text size="$xl">Cost per day : </Text>
+                  <input
+                    type="text"
+                    className="input input-bordered"
+                    placeholder="Cost per day"
+                  />
+                  {/* Estimated Cost */}
+                  <Text size="$xl">Estimated Cost : </Text>
+
+
+          
+
+              {/* <Textarea
+                readOnly
+                label="Case Details"
+                initialValue="FIR NO : 123/2021"
+              /> */}
+  
+            </Modal.Body>
+            <Modal.Footer>
+              <Button auto color="success" onPress={() => setVisible(false)}>
+                Purchase
+              </Button>
+              <Button auto  color="error" onPress={() => setVisible(false)}>
+                Close
+              </Button>
+              
+          
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            blur
+            scroll
+            width="600px"
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+            {...claimModalBindings}
+          >
+            <Modal.Header>
+              <Text id="modal-title" size={27} weight="bold">
+                Claim Insurance
+              </Text>
+            </Modal.Header>
+            <Modal.Body>
+              <Text size="$xl">Product Name : iPhone 13 Pro</Text>
+              <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
+              {/* Start Date Picker */}
+              
+                  <Text size="$xl">Select Case : </Text>
+                  <select className="select select-bordered w-full max-w-xs">
+                    <option value="1">THEFT</option>
+                    <option value="2">ACCIDENT</option>
+                    <option value="3">NOT WORKING</option>
+                  </select>
+                
+                  <Textarea
+                    label="Case Details : "
+                    placeholder="Case Details"
+                    initialValue=""
+                  />
+  
+            </Modal.Body>
+            <Modal.Footer>
+              <Button auto color="success" onPress={() => setClaimModalVisible(false)}>
+                Submit Claim
+              </Button>
+              <Button auto  color="error" onPress={() => setClaimModalVisible(false)}>
+                Close
+              </Button>
+
+            </Modal.Footer>
+          </Modal>
+          <Table
+            aria-label="Example table with static content"
+            css={{
+              height: "auto",
+              minWidth: "100%",
+            }}
+            // column
+          >
+            <Table.Header>
+              <Table.Column>Sl. No</Table.Column>
+              <Table.Column>CASE</Table.Column>
+              <Table.Column>DATE</Table.Column>
+              <Table.Column>INSURANCE</Table.Column>
+              <Table.Column>STATUS</Table.Column>
+            </Table.Header>
+            <Table.Body>
+              <Table.Row key="1">
+                <Table.Cell>1</Table.Cell>
+                <Table.Cell>MacBook Pro - THEFT FIR : CHN-54/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button   color="primary" auto onPress={() => setVisible(true)}>
+                        BUY INSURANCE
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="default" variant="bordered">
+                    INACTIVE
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row key="2">
+                <Table.Cell>2</Table.Cell>
+                <Table.Cell>iPHONE - THEFT FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button  color="success" auto onPress={handleClaimInsurance} >
+                      CLAIM INSURANCE
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="primary" variant="bordered">
+                      ACTIVE
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row key="3">
+                <Table.Cell>3</Table.Cell>
+                <Table.Cell>Bergamont Bicycle - THEFT FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button bordered color="gradient" auto>
+                        PROCESSING
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="warning" variant="bordered">
+                    POLICE VERIFICATION PENDING
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row key="4">
+                <Table.Cell>4</Table.Cell>
+                <Table.Cell>Nissan GTR - ACCIDENT FIR : CHN-124/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button bordered color="gradient" auto>
+                        PROCESSING
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="WARNING" variant="bordered">
+                    REPAIR INITIATED
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row key="5">
+                <Table.Cell>5</Table.Cell>
+                <Table.Cell>Ather 450X Gen 3 - THEFT FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button bordered color="gradient" auto>
+                        PROCESSING
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="success" variant="bordered">
+                    REIMBURSED
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row key="6">
+                <Table.Cell>6</Table.Cell>
+                <Table.Cell>OLA S1 PRO - THEFT FIR : CHN-1S253/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button bordered color="gradient" auto>
+                        PROCESSING
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="error" variant="bordered">
+                    REJECTED
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row key="7">
+                <Table.Cell>7</Table.Cell>
+                <Table.Cell>Atomberg Mixer Grinder - NOT WORKING FIR : CHN-123/2023</Table.Cell>
+                <Table.Cell> 12/12/2021</Table.Cell>
+                <Table.Cell>
+                      <Button bordered color="gradient" auto>
+                        PROCESSING
+                      </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge isSquared color="success" variant="bordered">
+                    REPAIRED
+                  </Badge>
+                </Table.Cell>
+              </Table.Row>
+              
+            </Table.Body>
+          </Table>
+        </div>
+        
+        }
       <Footer />
     </div>
   );
