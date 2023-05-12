@@ -11,20 +11,26 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-
+import Shop from "./shop";
+import Police from "./police";
+import Admin from "./admin";
 
 export default function Home() {
-  const [account, setAccount] = useState(""); 
+  const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [accountBalance, setAccountBalance] = useState(0);
-  const [sellerAccount, setSellerAccount] = useState("");
-  const [policeAccount, setPoliceAccount] = useState("");
+  const [sellerAccount, setSellerAccount] = useState(
+    "0x8491106BA7C7806577E216f8560E9f3d9eCC5ecd"
+  );
+  const [policeAccount, setPoliceAccount] = useState(
+    "0x61C40bc0Aa7D2aa1a89535C91Ea7bc1762a76513"
+  );
   const [repairAccount, setRepairAccount] = useState("");
   const [insurance, setInsurance] = useState(null);
-  const [userId , setUserId] = useState(0);
-  const [userName , setUserName] = useState("");
+  const [userId, setUserId] = useState(0);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const load = async () => {
@@ -72,7 +78,7 @@ export default function Home() {
     const response = await axios.get(
       `https://chainsafe-server.onrender.com/api/users?walletAddress=${accounts[0]}`
     );
-  
+
     if (response.data.length > 0) {
       // User exists
       const { userId, userName, walletAddress } = response.data[0];
@@ -84,14 +90,14 @@ export default function Home() {
       const userId = generateRandomId();
       const userName = prompt("Enter your name:");
       const walletAddress = accounts[0];
-  
+
       // Add user to the database
       await axios.post("https://chainsafe-server.onrender.com/api/addUser", {
         userId,
         userName,
         walletAddress,
       });
-  
+
       // Store user data in states
       // Replace the below lines with the appropriate state setters
       setUserId(userId);
@@ -105,7 +111,7 @@ export default function Home() {
     console.log(accounts);
     setAccount(accounts);
     setSellerAccount("0x8491106ba7c7806577e216f8560e9f3d9ecc5ecd");
-    setPoliceAccount("0x61c40bc0aa7d2aa1a89535c91ea7bc1762a76513");
+    setPoliceAccount("0x61C40bc0Aa7D2aa1a89535C91Ea7bc1762a76513");
     setRepairAccount("0x08e1767f49597f415dcb4faaf6af70a9f468b521");
   };
 
@@ -257,59 +263,92 @@ export default function Home() {
       });
   };
 
+  // Render different components based on the current user account
+  const renderContent = () => {
+    console.log(account === policeAccount);
+    console.log("Account: ", account);
+    console.log("Police Account: ", policeAccount);
+
+    if (account === policeAccount) {
+      return (
+        <Police
+          account={account}
+          userName={userName}
+          accountBalance={accountBalance}
+        />
+      );
+    } else if (account === sellerAccount) {
+      return (
+        <Admin
+          account={account}
+          userName={userName}
+          accountBalance={accountBalance}
+        />
+      );
+    } else {
+      return (
+        <Shop
+          account={account}
+          userName={userName}
+          accountBalance={accountBalance}
+        />
+      );
+    }
+  };
+
   return (
     <div>
-      <Head>
-        <title>ChainSafe | Home Page</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <Navbar />
       {/* <p>Connected Account: {account}</p>
       <p>Account Balance: {accountBalance}</p> */}
       {account ? (
         <>
-        <Welcome name={userName} />
-        <Wallet address={account} balance={accountBalance} />
+          {renderContent()}
         </>
-        
       ) : (
-        <div></div>
-      )}
-      {/* if connected account is seller ,redirect to admin page */}
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero min-h-screen bg-base-200 ">
-          <div className="flex-col hero-content lg:flex-row-reverse  p-0 w-screen ">
-            <img
-              src="/homepage.png"
-              className=" md:mb-5 md:basis-1/2 md:w-1/4"
+        <div>
+          <Head>
+            <title>ChainSafe | Home Page</title>
+            <meta
+              name="viewport"
+              content="initial-scale=1.0, width=device-width"
             />
-            <div className="px-12 py-6 md:basis-1/2 md:w-2/4 w-96 md:p-24 ">
-              <h1 className=" text-2xl text-left mb-5 md:text-4xl font-bold ">
-                Revolutionize Your <br></br>
-                Insurance Management <br></br>
-                with Blockchain
-              </h1>
-              <p className="mb-5">
-                Maximize Your Insurance Management <br></br>
-                with the Power of Blockchain
-              </p>
-              {/* <Link href="/"> */}
-              <button
-                id="#connectwallet"
-                className="md:mr-6 mb-6 md:w-44 w-full btn btn-primary px-8 bg-primary normal-case font-normal rounded-none"
-                onClick={async () => {
-                  await loadWeb3();
-                  await getAccountAndBalance(setAccount, setAccountBalance);
-                }}
-              >
-                Connect Wallet
-              </button>
-              {/* </Link> */}
+          </Head>
+          <Navbar />
+          <div className="hero min-h-screen bg-base-200">
+            <div className="hero min-h-screen bg-base-200 ">
+              <div className="flex-col hero-content lg:flex-row-reverse  p-0 w-screen ">
+                <img
+                  src="/homepage.png"
+                  className=" md:mb-5 md:basis-1/2 md:w-1/4"
+                />
+                <div className="px-12 py-6 md:basis-1/2 md:w-2/4 w-96 md:p-24 ">
+                  <h1 className=" text-2xl text-left mb-5 md:text-4xl font-bold ">
+                    Revolutionize Your <br></br>
+                    Insurance Management <br></br>
+                    with Blockchain
+                  </h1>
+                  <p className="mb-5">
+                    Maximize Your Insurance Management <br></br>
+                    with the Power of Blockchain
+                  </p>
+                  {/* <Link href="/"> */}
+                  <button
+                    id="#connectwallet"
+                    className="md:mr-6 mb-6 md:w-44 w-full btn btn-primary px-8 bg-primary normal-case font-normal rounded-none"
+                    onClick={async () => {
+                      await loadWeb3();
+                      await getAccountAndBalance(setAccount, setAccountBalance);
+                    }}
+                  >
+                    Connect Wallet
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+          <Footer />
         </div>
-      </div>
-      <Footer />
+      )}
     </div>
   );
 }
