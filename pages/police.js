@@ -12,7 +12,7 @@ import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
 
 
 
-export default function Shop() {
+export default function Police(props) {
 
   const { setVisible, bindings } = useModal();
 
@@ -24,8 +24,8 @@ export default function Shop() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Navbar />
-      <Welcome name="Police" />
-      <Wallet address="0x1234567890abcdef" balance="5.4321" />
+      <Welcome name={props.userName} />
+      <Wallet address={props.account} balance={props.accountBalance} />
       <div className="p-5">
         <Modal
           blur

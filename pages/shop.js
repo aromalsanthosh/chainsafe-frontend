@@ -13,9 +13,7 @@ import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
 
 
-
-
-export default function Shop() {
+export default function Shop(props) {
   const [productList, setProductList] = useState([]);
   // const [purchasedList, setPurchasedList] = useState([]);
   // hard coded for now
@@ -66,8 +64,8 @@ export default function Shop() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Navbar />
-      <Welcome name="Aromal" />
-      <Wallet address="0x1234567890abcdef" balance="5.4321" />
+      <Welcome name={props.userName} />
+      <Wallet address={props.account} balance={props.accountBalance} />
       {/* tab container */}
       <div className="flex justify-center mb-4 mt-4">
         <button
