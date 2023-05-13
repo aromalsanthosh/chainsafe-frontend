@@ -161,10 +161,22 @@ export default function Products(props) {
       <div className="p-2 md-2 flex justify-between">
         <h3 className="pt-4 ml-5 pl-3 text-3xl font-bold text-left">Products</h3>
         {/* redirect to /products on click */}
-        <Button auto color="success" className="mt-4 mr-5" >
+        {/* <Button auto color="success" className="mt-4 mr-5" >
           Add new Product
-        </Button>
+        </Button> */}
+        {/* Back Button */}
+        {/* <Button auto color="error" className="mt-4 mr-5" >
+          Back
+        </Button> */}
+        <div className="flex justify-end">
+          <Button auto color="success" className="mt-4 mr-5">
+            Add new Product
+          </Button>
+          <Button auto color="error" className="mt-4 mr-5" onPress={() => router.back()}>
+            Back
+          </Button>
         </div>
+      </div>
       <div className="p-5">
         {selectedProduct && renderModal(selectedProduct)}
         {/* button to add new product aligned right */}
