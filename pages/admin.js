@@ -8,10 +8,26 @@ import { Button } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
+import { useRouter } from 'next/router';
+import Product from "./products";
 
 export default function Admin(props) {
+  const router = useRouter();
 
   const { setVisible, bindings } = useModal();
+
+  const handleRedirect = () => {
+    // render Product component
+    router.push({
+      pathname: '/products',
+      query: { name: props.userName, account: props.account, accountBalance: props.accountBalance },
+    })
+    
+
+
+
+  }
+
 
   return (
     <div>
@@ -24,7 +40,15 @@ export default function Admin(props) {
       <Wallet address={props.account} balance={props.accountBalance} />
 
       {/* heading "Claims" */}
-      <h3 className="pt-4 text-2xl font-bold text-center">Claims</h3>      
+      
+           {/* Button to Add Product */}
+      <div className="flex justify-between">
+        <h3 className="pt-4 ml-5 pl-3 text-3xl font-bold text-left">Claims</h3>
+        {/* redirect to /products on click */}
+        <Button auto color="success" className="mt-4 mr-5" onPress={handleRedirect}>
+          Manage Products
+        </Button>
+      </div>
       <div className="p-5">
         <Modal
           blur
