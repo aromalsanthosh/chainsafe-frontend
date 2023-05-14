@@ -17,7 +17,7 @@ import Admin from "./admin";
 import Insurance from "../abis/Insurance.json";
 
 export default function Home() {
-  const contractAddress = "0xbDE215c51a7C4953204b733F818879fCDBcE495B";
+  const contractAddress = "0xA40D9bc8DEfC77B69F5A6F99F879C54B0c8c39FC";
   const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(0);
   const [products, setProducts] = useState([]);
@@ -31,7 +31,7 @@ export default function Home() {
   );
   const [userId, setUserId] = useState(0);
   const [userName, setUserName] = useState("");
-  const insuranceContract = "";
+  const [insuranceContract, setInsuranceContract] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -108,7 +108,11 @@ export default function Home() {
 
   const loadBlockchainData = async () => {
     console.log("Function loadBLockchainData has been called");
-    insuranceContract = new web3.eth.Contract(Insurance.abi, contractAddress);
+    const insuranceContract = new web3.eth.Contract(
+      Insurance.abi,
+      contractAddress
+    );
+    setInsuranceContract(insuranceContract);
     if (insuranceContract) {
       window.alert("Insurance contract has been deployed");
     } else {
