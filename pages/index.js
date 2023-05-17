@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import Link from "next/link";
 import Web3 from "web3";
 import { useState, useEffect } from "react";
-import Insurance from "../abis/Insurance.json";
 import Wallet from "../components/Wallet";
 import Welcome from "../components/Welcome";
 import { v4 as uuidv4 } from "uuid";
@@ -15,7 +14,10 @@ import Shop from "./shop";
 import Police from "./police";
 import Admin from "./admin";
 
+import Insurance from "../abis/Insurance.json";
+
 export default function Home() {
+  const contractAddress = "0xA40D9bc8DEfC77B69F5A6F99F879C54B0c8c39FC";
   const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(0);
   const [products, setProducts] = useState([]);
@@ -27,16 +29,15 @@ export default function Home() {
   const [policeAccount, setPoliceAccount] = useState(
     "0x61C40bc0Aa7D2aa1a89535C91Ea7bc1762a76513"
   );
-  const [repairAccount, setRepairAccount] = useState("");
-  const [insurance, setInsurance] = useState(null);
   const [userId, setUserId] = useState(0);
   const [userName, setUserName] = useState("");
+  const [insuranceContract, setInsuranceContract] = useState(null);
 
   useEffect(() => {
     const load = async () => {
       await loadWeb3();
       await getAccountAndBalance(setAccount, setAccountBalance);
-      // await loadBlockchainData();
+      await loadBlockchainData();
     };
     load();
   }, []);
@@ -105,170 +106,129 @@ export default function Home() {
     }
   };
 
-  const getAllAccounts = async () => {
-    let web3 = new Web3(window.ethereum);
-    const accounts = await web3.eth.getAccounts();
-    console.log(accounts);
-    setAccount(accounts);
-    setSellerAccount("0x8491106ba7c7806577e216f8560e9f3d9ecc5ecd");
-    setPoliceAccount("0x61C40bc0Aa7D2aa1a89535C91Ea7bc1762a76513");
-    setRepairAccount("0x08e1767f49597f415dcb4faaf6af70a9f468b521");
-  };
-
   const loadBlockchainData = async () => {
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    setAccount(window.ethereum.selectedAddress);
-
-    let accountBalance = await web3.eth.getBalance(
-      window.ethereum.selectedAddress
-    );
-    accountBalance = web3.utils.fromWei(accountBalance, "ether");
-    setAccountBalance(accountBalance);
-
+    console.log("Function loadBLockchainData has been called");
     const insuranceContract = new web3.eth.Contract(
       Insurance.abi,
-      "0x752cA0Ef9756835f2e9d422dbB0360dEbD8D0317"
+      contractAddress
     );
-
-    setInsurance(insuranceContract);
-
-    if (insuranceContract.options.address) {
-      console.log(
-        "Connected to smart contract at",
-        insuranceContract.methods.productCount().call().then(console.log)
-      );
-    } else {
-      console.log("Failed to connect to smart contract");
-    }
-
-    const methods = insuranceContract.methods;
-    const methodNames = Object.getOwnPropertyNames(
-      Object.getPrototypeOf(methods)
-    );
-    console.log(methodNames);
-
+    setInsuranceContract(insuranceContract);
     if (insuranceContract) {
-      const productCount = await insuranceContract.methods
-        .productCount()
-        .call();
-      setProductCount(productCount);
-
-      // Load products
-      for (var i = 1; i <= productCount; i++) {
-        const product = await insuranceContract.methods.products(i).call();
-        setProducts((prevProducts) => [...prevProducts, product]);
-      }
-      setLoading(false);
+      window.alert("Insurance contract has been deployed");
     } else {
       window.alert("Insurance contract not deployed to detected network.");
     }
+
+    // addProduct("1", "Apple", "MacBook", "None", 12, "12-04-2022", account);
   };
 
-  const createProduct = (name, price, insurancePrice) => {
-    setLoading(true);
-    insurance.methods
-      .createProduct(name, price, insurancePrice)
-      .send({ from: account })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
-        setLoading(false);
-      });
+  const addProduct = async (
+    id,
+    brand,
+    model,
+    productImage,
+    productPrice,
+    purchanseDate,
+    owner
+  ) => {
+    try {
+      await insuranceContract.methods
+        .addProduct(
+          id,
+          brand,
+          model,
+          productImage,
+          productPrice,
+          purchanseDate,
+          owner
+        )
+        .send({ from: owner, value: productPrice })
+        .on("receipt", (receipt) => {
+          console.log(receipt);
+        });
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
 
-  const purchaseProduct = (id, price) => {
-    setLoading(true);
-    insurance.methods
-      .purchaseProduct(id, repairAccount, policeAccount)
-      .send({ from: account, value: price })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
-      });
-  };
-
-  const purchaseInsurance = (id, insurancePrice) => {
-    setLoading(true);
-    insurance.methods
-      .purchaseInsurance(id, repairAccount, policeAccount)
+  const addInsurance = (productId, startDate, endDate, insurancePrice) => {
+    insuranceContract.methods
+      .addInsurance(productId, startDate, endDate, insurancePrice)
       .send({ from: account, value: insurancePrice })
       .on("receipt", (receipt) => {
         console.log(receipt);
-        setLoading(false);
       });
   };
 
-  const policeClaim = (id) => {
-    setLoading(true);
-    insurance.methods
-      .claimPolice(id, repairAccount, policeAccount)
+  const addClaim = (productId) => {
+    insuranceContract.methods
+      .addClaim(productId)
       .send({ from: account })
       .on("receipt", (receipt) => {
         console.log(receipt);
-        setLoading(false);
       });
   };
 
-  const repairClaim = (id) => {
-    setLoading(true);
-    insurance.methods
-      .claimRepair(id, repairAccount, policeAccount)
+  const updateInsuranceStatus = (productId, InsuranceStatus, description) => {
+    insuranceContract.methods
+      .updateInsuranceStatus(productId, InsuranceStatus, description)
       .send({ from: account })
       .on("receipt", (receipt) => {
         console.log(receipt);
-        setLoading(false);
       });
   };
 
-  const stolen = (id) => {
-    setLoading(true);
-    insurance.methods
-      .stolen(id, repairAccount, policeAccount)
+  const getMyProducts = async () => {
+    try {
+      const myProducts = await insuranceContract.methods
+        .getMyProducts()
+        .call({ from: account });
+
+      console.log("My Products:", myProducts);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getAllClaims = async () => {
+    try {
+      const claims = await insuranceContract.methods
+        .getAllClaims()
+        .call({ from: account });
+
+      console.log("Claims:", claims);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getAllClaimsUnderInvestigation = async () => {
+    const claimsUnderInvestigation = await insuranceContract.methods
+      .getAllClaimsUnderInvestigation()
+      .call({ from: account });
+    console.log(claimsUnderInvestigation);
+  };
+
+  const updateInsuranceStatusPolice = () => {
+    insuranceContract.methods
+      .updateInsuranceStatusPolice(productId, InsuranceStatus, description)
       .send({ from: account })
       .on("receipt", (receipt) => {
         console.log(receipt);
-        setLoading(false);
       });
   };
 
-  const repaired = (id) => {
-    setLoading(true);
-    insurance.methods
-      .repaired(id, repairAccount, policeAccount)
-      .send({ from: account })
+  const sendRefund = (productId, refundPrice) => {
+    insuranceContract.methods
+      .sendRefund(productId)
+      .send({ from: account, value: refundPrice })
       .on("receipt", (receipt) => {
         console.log(receipt);
-        setLoading(false);
-      });
-  };
-
-  const reimburse = (id, productPrice) => {
-    setLoading(true);
-    insurance.methods
-      .reimburse(id, repairAccount, policeAccount)
-      .send({ from: account, value: productPrice })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
-        setLoading(false);
-      });
-  };
-
-  const payRepairShop = (id, repairFee) => {
-    setLoading(true);
-    insurance.methods
-      .payRepairShop(id, repairAccount, policeAccount)
-      .send({ from: account, value: repairFee })
-      .once("receipt", (receipt) => {
-        console.log(receipt);
-        setLoading(false);
       });
   };
 
   // Render different components based on the current user account
   const renderContent = () => {
-    console.log(account === policeAccount);
-    console.log("Account: ", account);
-    console.log("Police Account: ", policeAccount);
-
     if (account === policeAccount) {
       return (
         <Police
@@ -287,13 +247,47 @@ export default function Home() {
       );
     } else {
       return (
-        <Shop
-          account={account}
-          userName={userName}
-          accountBalance={accountBalance}
-        />
+        <>
+          <Shop
+            account={account}
+            userName={userName}
+            accountBalance={accountBalance}
+          />
+          <button
+            onClick={async () => {
+              // console.log(insuranceContract.methods);
+              // console.log(Insurance.abi);
+              addProduct(
+                "10",
+                "new t4est new account ",
+                "iPhone",
+                "nana",
+                1,
+                "20-10-2022",
+                account
+              );
+              // addInsurance(1, "20-10-2022", "30-12-2025", 5)
+              // getMyProducts();
+            }}
+          >
+            Add Product
+          </button>
+          <button
+            onClick={() => {
+              getMyProducts();
+            }}
+          >
+            Get All Products
+          </button>
+        </>
       );
     }
+  };
+
+  // creating new functions
+  const getInsuranceContract = () => {
+    const insurance = web3.eth.Contract(Insurance.abi, contractAddress);
+    return insurance;
   };
 
   return (
@@ -301,9 +295,7 @@ export default function Home() {
       {/* <p>Connected Account: {account}</p>
       <p>Account Balance: {accountBalance}</p> */}
       {account ? (
-        <>
-          {renderContent()}
-        </>
+        <>{renderContent()}</>
       ) : (
         <div>
           <Head>
@@ -338,6 +330,7 @@ export default function Home() {
                     onClick={async () => {
                       await loadWeb3();
                       await getAccountAndBalance(setAccount, setAccountBalance);
+                      await loadBlockchainData();
                     }}
                   >
                     Connect Wallet
