@@ -3,7 +3,7 @@ import Head from "next/head";
 import Footer from "../components/Footer";
 import Link from "next/link";
 import Web3 from "web3";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Wallet from "../components/Wallet";
 import Welcome from "../components/Welcome";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +15,7 @@ import Police from "./police";
 import Admin from "./admin";
 
 import Insurance from "../abis/Insurance.json";
+import { TransactionContext } from "../context/TransactionContext";
 
 export default function Home() {
   const contractAddress = "0xA40D9bc8DEfC77B69F5A6F99F879C54B0c8c39FC";
@@ -32,6 +33,8 @@ export default function Home() {
   const [userId, setUserId] = useState(0);
   const [userName, setUserName] = useState("");
   const [insuranceContract, setInsuranceContract] = useState(null);
+
+  const { addProduct } = useContext(TransactionContext);
 
   useEffect(() => {
     const load = async () => {
@@ -122,34 +125,34 @@ export default function Home() {
     // addProduct("1", "Apple", "MacBook", "None", 12, "12-04-2022", account);
   };
 
-  const addProduct = async (
-    id,
-    brand,
-    model,
-    productImage,
-    productPrice,
-    purchanseDate,
-    owner
-  ) => {
-    try {
-      await insuranceContract.methods
-        .addProduct(
-          id,
-          brand,
-          model,
-          productImage,
-          productPrice,
-          purchanseDate,
-          owner
-        )
-        .send({ from: owner, value: productPrice })
-        .on("receipt", (receipt) => {
-          console.log(receipt);
-        });
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
+  // const addProduct = async (
+  //   id,
+  //   brand,
+  //   model,
+  //   productImage,
+  //   productPrice,
+  //   purchanseDate,
+  //   owner
+  // ) => {
+  //   try {
+  //     await insuranceContract.methods
+  //       .addProduct(
+  //         id,
+  //         brand,
+  //         model,
+  //         productImage,
+  //         productPrice,
+  //         purchanseDate,
+  //         owner
+  //       )
+  //       .send({ from: owner, value: productPrice })
+  //       .on("receipt", (receipt) => {
+  //         console.log(receipt);
+  //       });
+  //   } catch (error) {
+  //     console.log("Error", error);
+  //   }
+  // };
 
   const addInsurance = (productId, startDate, endDate, insurancePrice) => {
     insuranceContract.methods
@@ -209,7 +212,11 @@ export default function Home() {
     console.log(claimsUnderInvestigation);
   };
 
-  const updateInsuranceStatusPolice = () => {
+  const updateInsuranceStatusPolice = (
+    productId,
+    InsuranceStatus,
+    description
+  ) => {
     insuranceContract.methods
       .updateInsuranceStatusPolice(productId, InsuranceStatus, description)
       .send({ from: account })
@@ -258,8 +265,8 @@ export default function Home() {
               // console.log(insuranceContract.methods);
               // console.log(Insurance.abi);
               addProduct(
-                "10",
-                "new t4est new account ",
+                "11",
+                "new t4est account ",
                 "iPhone",
                 "nana",
                 1,
