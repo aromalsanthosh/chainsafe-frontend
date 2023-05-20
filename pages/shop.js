@@ -4,21 +4,19 @@ import Footer from "../components/Footer";
 import Welcome from "../components/Welcome";
 import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
-import { useState, useEffect ,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Table } from '@nextui-org/react';
+import { Table } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
-import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
+import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
 import { TransactionContext } from "../context/TransactionContext";
 
-
 export default function Shop(props) {
-  const { getMyProducts } = useContext(TransactionContext);
-  const [purchasedProducts, setPurchasedProducts] = useState([]);
+  const { purchasedProducts } = useContext(TransactionContext);
 
-
+  console.log("The Purchased Products", purchasedProducts);
   const [productList, setProductList] = useState([]);
   // const [purchasedList, setPurchasedList] = useState([]);
   // hard coded for now
@@ -26,16 +24,15 @@ export default function Shop(props) {
   // modal 2 for claim insurance
   // const { setVisible, bindings2 } = useModal();
   // const { setVisible2, bindings: bindings2 } = useModal();
-  const { setVisible: setClaimModalVisible, bindings: claimModalBindings } = useModal();
+  const { setVisible: setClaimModalVisible, bindings: claimModalBindings } =
+    useModal();
 
   const handleClaimInsurance = () => {
     setClaimModalVisible(true);
   };
 
   // TODO : fetch purchased products from blockchain and store in purchasedList
-  
 
-  
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
@@ -88,15 +85,11 @@ export default function Shop(props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {activeTab === "all" &&
           productList.map((product) => (
-            <ProductCard
-              key={product.productId}
-              product = {product}
-            />
+            <ProductCard key={product.productId} product={product} />
           ))}
       </div>
-      {activeTab === "purchased" &&
-
-          <div className="p-5">
+      {activeTab === "purchased" && (
+        <div className="p-5">
           <Modal
             blur
             scroll
@@ -114,49 +107,43 @@ export default function Shop(props) {
               <Text size="$xl">Product Name : iPhone 13 Pro</Text>
               <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
               {/* Start Date Picker */}
-              
-                  <Text size="$xl">Start Date : </Text> 
-                  <input
-                    type="date"
-                    className="input input-bordered"
-                    placeholder="Start Date"
-                  />
-                
-                  <Text size="$xl">End Date :</Text>
-                  <input
-                    type="date"
-                    className="input input-bordered"
-                    placeholder="End Date"
-                  />
-                  {/* Cost per day */}
-                  <Text size="$xl">Cost per day : </Text>
-                  <input
-                    type="text"
-                    className="input input-bordered"
-                    placeholder="Cost per day"
-                  />
-                  {/* Estimated Cost */}
-                  <Text size="$xl">Estimated Cost : </Text>
 
+              <Text size="$xl">Start Date : </Text>
+              <input
+                type="date"
+                className="input input-bordered"
+                placeholder="Start Date"
+              />
 
-          
+              <Text size="$xl">End Date :</Text>
+              <input
+                type="date"
+                className="input input-bordered"
+                placeholder="End Date"
+              />
+              {/* Cost per day */}
+              <Text size="$xl">Cost per day : </Text>
+              <input
+                type="text"
+                className="input input-bordered"
+                placeholder="Cost per day"
+              />
+              {/* Estimated Cost */}
+              <Text size="$xl">Estimated Cost : </Text>
 
               {/* <Textarea
                 readOnly
                 label="Case Details"
                 initialValue="FIR NO : 123/2021"
               /> */}
-  
             </Modal.Body>
             <Modal.Footer>
               <Button auto color="success" onPress={() => setVisible(false)}>
                 Purchase
               </Button>
-              <Button auto  color="error" onPress={() => setVisible(false)}>
+              <Button auto color="error" onPress={() => setVisible(false)}>
                 Close
               </Button>
-              
-          
             </Modal.Footer>
           </Modal>
           <Modal
@@ -176,29 +163,35 @@ export default function Shop(props) {
               <Text size="$xl">Product Name : iPhone 13 Pro</Text>
               <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
               {/* Start Date Picker */}
-              
-                  <Text size="$xl">Select Case : </Text>
-                  <select className="select select-bordered w-full max-w-xs">
-                    <option value="1">THEFT</option>
-                    <option value="2">ACCIDENT</option>
-                    <option value="3">NOT WORKING</option>
-                  </select>
-                
-                  <Textarea
-                    label="Case Details : "
-                    placeholder="Case Details"
-                    initialValue=""
-                  />
-  
+
+              <Text size="$xl">Select Case : </Text>
+              <select className="select select-bordered w-full max-w-xs">
+                <option value="1">THEFT</option>
+                <option value="2">ACCIDENT</option>
+                <option value="3">NOT WORKING</option>
+              </select>
+
+              <Textarea
+                label="Case Details : "
+                placeholder="Case Details"
+                initialValue=""
+              />
             </Modal.Body>
             <Modal.Footer>
-              <Button auto color="success" onPress={() => setClaimModalVisible(false)}>
+              <Button
+                auto
+                color="success"
+                onPress={() => setClaimModalVisible(false)}
+              >
                 Submit Claim
               </Button>
-              <Button auto  color="error" onPress={() => setClaimModalVisible(false)}>
+              <Button
+                auto
+                color="error"
+                onPress={() => setClaimModalVisible(false)}
+              >
                 Close
               </Button>
-
             </Modal.Footer>
           </Modal>
           <Table
@@ -222,9 +215,9 @@ export default function Shop(props) {
                 <Table.Cell>MacBook Pro M2 2023 16/512GB</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button   color="primary" auto onPress={() => setVisible(true)}>
-                        BUY INSURANCE
-                      </Button>
+                  <Button color="primary" auto onPress={() => setVisible(true)}>
+                    BUY INSURANCE
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="default" variant="bordered">
@@ -237,13 +230,13 @@ export default function Shop(props) {
                 <Table.Cell>iPhone 14 Pro Max</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button  color="success" auto onPress={handleClaimInsurance} >
-                      CLAIM INSURANCE
-                      </Button>
+                  <Button color="success" auto onPress={handleClaimInsurance}>
+                    CLAIM INSURANCE
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="primary" variant="bordered">
-                      ACTIVE
+                    ACTIVE
                   </Badge>
                 </Table.Cell>
               </Table.Row>
@@ -252,9 +245,9 @@ export default function Shop(props) {
                 <Table.Cell>Bergamont Bicycle </Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button bordered color="gradient" auto>
-                        PROCESSING
-                      </Button>
+                  <Button bordered color="gradient" auto>
+                    PROCESSING
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="warning" variant="bordered">
@@ -267,9 +260,9 @@ export default function Shop(props) {
                 <Table.Cell>Nissan GTR R34</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button bordered color="gradient" auto>
-                        PROCESSING
-                      </Button>
+                  <Button bordered color="gradient" auto>
+                    PROCESSING
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="WARNING" variant="bordered">
@@ -282,9 +275,9 @@ export default function Shop(props) {
                 <Table.Cell>Ather 450X Gen 3 </Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button bordered color="gradient" auto>
-                        PROCESSING
-                      </Button>
+                  <Button bordered color="gradient" auto>
+                    PROCESSING
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="success" variant="bordered">
@@ -297,9 +290,9 @@ export default function Shop(props) {
                 <Table.Cell>OLA S1 PRO </Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button bordered color="gradient" auto>
-                        PROCESSING
-                      </Button>
+                  <Button bordered color="gradient" auto>
+                    PROCESSING
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="error" variant="bordered">
@@ -312,9 +305,9 @@ export default function Shop(props) {
                 <Table.Cell>Atomberg Mixer Grinder</Table.Cell>
                 <Table.Cell> 12/12/2021</Table.Cell>
                 <Table.Cell>
-                      <Button bordered color="gradient" auto>
-                        PROCESSING
-                      </Button>
+                  <Button bordered color="gradient" auto>
+                    PROCESSING
+                  </Button>
                 </Table.Cell>
                 <Table.Cell>
                   <Badge isSquared color="success" variant="bordered">
@@ -322,12 +315,10 @@ export default function Shop(props) {
                   </Badge>
                 </Table.Cell>
               </Table.Row>
-              
             </Table.Body>
           </Table>
         </div>
-        
-        }
+      )}
       <Footer />
     </div>
   );
