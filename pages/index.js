@@ -117,7 +117,7 @@ export default function Home() {
     );
     setInsuranceContract(insuranceContract);
     if (insuranceContract) {
-      window.alert("Insurance contract has been deployed");
+      console.log("Insurance contract deployed to detected network.");
     } else {
       window.alert("Insurance contract not deployed to detected network.");
     }
