@@ -10,6 +10,7 @@ export const TransactionProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
   const [insuranceContract, setInsuranceContract] = useState(null);
+  const [purchasedProducts, setPurchasedProducts] = useState([]);
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -33,7 +34,6 @@ export const TransactionProvider = ({ children }) => {
     accountBalance = web3.utils.fromWei(accountBalance, "ether");
 
     setAccountBalance(accountBalance);
-
   };
 
   const loadBlockchainData = async () => {
@@ -50,6 +50,15 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
+  const fetchProducts = async () => {
+    try {
+      const products = await getMyProducts();
+      setPurchasedProducts(products);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
   useEffect(() => {
     const load = async () => {
       await loadWeb3();
@@ -58,6 +67,21 @@ export const TransactionProvider = ({ children }) => {
     };
     load();
   }, []);
+
+  useEffect(() => {
+    window.ethereum.on("accountsChanged", function (accounts) {
+      getAccountAndBalance();
+      window.location.reload();
+    });
+  }, []);
+
+  // calls the fetchProucts function whenever the account or the insurance contract changes
+  useEffect(() => {
+    const load = async () => {
+      await fetchProducts();
+    };
+    load();
+  }, [account, insuranceContract]);
 
   const addProduct = async (
     id,
@@ -217,6 +241,8 @@ export const TransactionProvider = ({ children }) => {
       value={{
         account,
         accountBalance,
+        insuranceContract,
+        purchasedProducts,
         loadWeb3,
         getAccountAndBalance,
         loadBlockchainData,
