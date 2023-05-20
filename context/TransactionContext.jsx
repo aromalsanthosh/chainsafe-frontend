@@ -241,6 +241,7 @@ export const TransactionProvider = ({ children }) => {
       value={{
         account,
         accountBalance,
+        insuranceContract,
         purchasedProducts,
         loadWeb3,
         getAccountAndBalance,
