@@ -14,7 +14,26 @@ import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
 import { TransactionContext } from "../context/TransactionContext";
 
 export default function Shop(props) {
-  const { purchasedProducts } = useContext(TransactionContext);
+  const { account, insuranceContract, getMyProducts } =
+    useContext(TransactionContext);
+
+  const [purchasedProducts, setPurchasedProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const products = await getMyProducts();
+      setPurchasedProducts(products);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
+  useEffect(() => {
+    const load = async () => {
+      await fetchProducts();
+    };
+    load();
+  }, [account, insuranceContract]);
 
   console.log("The Purchased Products", purchasedProducts);
   const [productList, setProductList] = useState([]);
