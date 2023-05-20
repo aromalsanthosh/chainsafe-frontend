@@ -33,6 +33,7 @@ export const TransactionProvider = ({ children }) => {
     accountBalance = web3.utils.fromWei(accountBalance, "ether");
 
     setAccountBalance(accountBalance);
+
   };
 
   const loadBlockchainData = async () => {
@@ -147,7 +148,7 @@ export const TransactionProvider = ({ children }) => {
         .getMyProducts()
         .call({ from: account });
 
-      console.log("My Products:", myProducts);
+      return myProducts;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -214,6 +215,8 @@ export const TransactionProvider = ({ children }) => {
   return (
     <TransactionContext.Provider
       value={{
+        account,
+        accountBalance,
         loadWeb3,
         getAccountAndBalance,
         loadBlockchainData,
