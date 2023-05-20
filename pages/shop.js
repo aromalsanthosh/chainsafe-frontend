@@ -4,16 +4,21 @@ import Footer from "../components/Footer";
 import Welcome from "../components/Welcome";
 import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext } from "react";
 import axios from "axios";
 import { Table } from '@nextui-org/react';
 import { Button } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
+import { TransactionContext } from "../context/TransactionContext";
 
 
 export default function Shop(props) {
+  const { getMyProducts } = useContext(TransactionContext);
+  const [purchasedProducts, setPurchasedProducts] = useState([]);
+
+
   const [productList, setProductList] = useState([]);
   // const [purchasedList, setPurchasedList] = useState([]);
   // hard coded for now
@@ -27,16 +32,10 @@ export default function Shop(props) {
     setClaimModalVisible(true);
   };
 
+  // TODO : fetch purchased products from blockchain and store in purchasedList
+  
 
-  const purchasedList = [
-    {
-      productId: 1,
-      imageUrl: "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-13-finish-select-202207-6-1inch-pink?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1657641867367?imwidth=1920",
-      brand: "Apple",
-      model: "iPhone 13 Pro",
-      price: 1.5,
-    },
-  ]
+  
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
@@ -91,10 +90,7 @@ export default function Shop(props) {
           productList.map((product) => (
             <ProductCard
               key={product.productId}
-              imageUrl={product.image}
-              brand={product.brand}
-              model={product.model}
-              priceInEth={product.price}
+              product = {product}
             />
           ))}
       </div>
