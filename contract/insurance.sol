@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 contract ProductInsurance {
     address public admin = 0x8491106BA7C7806577E216f8560E9f3d9eCC5ecd;
@@ -42,7 +42,7 @@ contract ProductInsurance {
     event ClaimAdded(uint256 productId);
     event InsuranceStatusUpdated(uint256 productId, InsuranceStatus status, string description);
 
-    uint256 private productIdCounter;
+    uint256 public productIdCounter;
 
     // function to add product
     function addProduct(string memory id, string memory brand, string memory model, string memory productImage, uint256 productPrice,string memory purchaseDate, address owner) public payable {
