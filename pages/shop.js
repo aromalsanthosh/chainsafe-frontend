@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Welcome from "../components/Welcome";
 import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext , useCallback} from "react"
 import axios from "axios";
 import { Table } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -14,28 +14,28 @@ import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
 import { TransactionContext } from "../context/TransactionContext";
 
 export default function Shop(props) {
-  const { account, insuranceContract, getMyProducts ,addInsurance} =
+  const { account, insuranceContract, getMyProducts ,addInsurance, addClaim, updateInsuranceStatusPolice} =
     useContext(TransactionContext);
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const products = await getMyProducts();
       setPurchasedProducts(products);
     } catch (error) {
       console.error("error", error);
     }
-  };
+  }, [getMyProducts]);
 
   useEffect(() => {
     const load = async () => {
       await fetchProducts();
     };
     load();
-  }, [account, insuranceContract]);
+  }, [account, insuranceContract, fetchProducts]);
 
   // console.log("The Purchased Products", purchasedProducts);
   const [productList, setProductList] = useState([]);
@@ -56,7 +56,7 @@ export default function Shop(props) {
     1: "INACTIVE",
     2: "REPLACEMENT APPROVED",
     3: "REPAIR REQUESTED",
-    4: "REFUND APPROVED",
+    4: "ADMIN APPROVAL PENDING",
     5: "REFUND SUCCESS",
     6: "CLAIM FILED",
     7: "POLICE VERIFICATION PENDING",
@@ -68,9 +68,9 @@ export default function Shop(props) {
     1: "default",
     2: "success",
     3: "WARNING",
-    4: "success",
+    4: "secondary",
     5: "success",
-    6: "warning",
+    6: "secondary",
     7: "warning",
     8: "error",
   };
@@ -93,7 +93,7 @@ export default function Shop(props) {
 
 
   const renderClaimInsuranceModal = (product) => {
-    // setSelectedProduct(product);
+    setSelectedProduct(product);
     setClaimModalVisible(true);
   };
 
@@ -117,7 +117,7 @@ export default function Shop(props) {
     switch (status) {
       case 0:
         return (
-          <Button auto color="success" onPress={handleClaimInsurance}>
+          <Button auto color="success" onPress={() => renderClaimInsuranceModal(product)}>
             Claim Insurance
           </Button>
         );
@@ -133,7 +133,7 @@ export default function Shop(props) {
         );
       default:
         return (
-          <Button auto color="gradient" disabled>
+          <Button auto bordered color="gradient" >
             Processing
           </Button>
         );
@@ -193,20 +193,74 @@ export default function Shop(props) {
   ];
 
   const handleInsurancePurchase = async (product) => {
-    console.log('product.index',product.index);
+    
+    console.log('productid',typeof product.id);
+    // let id = parseInt(product.id);
     try {
+
       const response = await addInsurance(
-        product.index,
+        product.id,
         startDate,
         endDate,
         1
       );
       console.log(response);
       setVisible(false);
+      
     } catch (error) {
       console.log(error);
     }
     
+  }
+
+  //state for case details text area
+  const [caseDetails, setCaseDetails] = useState("");
+  //state for case type , 1 for theft, 2 for accident, 3 for not working
+  const [caseType, setCaseType] = useState("1");
+  const [insuranceStatus, setInsuranceStatus] = useState(0);
+
+
+
+  // useffect to set Insurance Status
+  useEffect(() => {
+    if (caseType === "1") {
+      //Theft - under investigation
+      setInsuranceStatus(7)
+    } else if (caseType === "2") {
+      //Accident - under investigation
+      setInsuranceStatus(7);
+    }
+    else if (caseType === "3") {
+      //Repair
+      setInsuranceStatus(3);
+    }
+  }, [caseType]);
+  
+
+  const handleInsuranceClaim = async (product) => {
+    // console.log("Case Details", caseDetails);
+    // console.log("Case Type", caseType);
+    console.log("Product ID", product.id);
+    try {
+      const response = await addClaim(
+        product.id,
+        insuranceStatus,
+        caseDetails
+      );
+      console.log(response);
+      //update insurance status to claim filed
+      // const updateResponse = await updateInsuranceStatusPolice(
+      //   product.id,
+      //   insuranceStatus,
+      //   caseDetails,
+      // );
+      // console.log(updateResponse);
+      setClaimModalVisible(false);
+    }
+    catch (error) {
+      console.log(error);
+    }
+
   }
 
   //use effect to calculate the estimated cost
@@ -233,6 +287,7 @@ export default function Shop(props) {
         cost = diffDays * 0.0000240;
         break;
     }
+    console.log(cost);
     setEstimatedCost(cost);
   }, [startDate, endDate, plan]);
 
@@ -295,7 +350,7 @@ export default function Shop(props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {activeTab === "all" &&
           productList.map((product) => (
-            <ProductCard key={product.productId} product={product} />
+            <ProductCard key={product.productId} product={product} userName={props.userName} />
           ))}
       </div>
       {activeTab === "purchased" && (
@@ -384,12 +439,14 @@ export default function Shop(props) {
               </Text>
             </Modal.Header>
             <Modal.Body>
-              <Text size="$xl">Product Name : iPhone 13 Pro</Text>
-              <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
+              <Text size="$xl">Product Name : {selectedProduct ? `${selectedProduct.brand} ${selectedProduct.model}` : ""}</Text>
+              <Text size="$xl">Owner Name : {selectedProduct ? `${props.userName} (${props.account.slice(0, 6)}...${props.account.slice(-4)})` : ""}</Text>
               {/* Start Date Picker */}
 
               <Text size="$xl">Select Case : </Text>
-              <select className="select select-bordered w-full max-w-xs">
+              <select className="select select-bordered w-full max-w-xs"
+              onChange={(e) => setCaseType(e.target.value)}
+              >
                 <option value="1">THEFT</option>
                 <option value="2">ACCIDENT</option>
                 <option value="3">NOT WORKING</option>
@@ -399,13 +456,14 @@ export default function Shop(props) {
                 label="Case Details : "
                 placeholder="Case Details"
                 initialValue=""
+                onChange={(e) => setCaseDetails(e.target.value)}
               />
             </Modal.Body>
             <Modal.Footer>
               <Button
                 auto
                 color="success"
-                onPress={() => setClaimModalVisible(false)}
+                onPress={() => handleInsuranceClaim(selectedProduct)}
               >
                 Submit Claim
               </Button>
