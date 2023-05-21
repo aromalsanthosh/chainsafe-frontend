@@ -3,18 +3,18 @@ import Image from "next/image";
 import { useContext } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 
-function ProductCard({ product }) {
+function ProductCard({ product, userName }) {
   const { addProduct, account } = useContext(TransactionContext);
 
   const handleBuyNow = () => {
     addProduct(
       product.brand,
       product.model,
-      product.image,
       product.price,
       // date in YYYY-MM-DD format
       new Date().toISOString().slice(0, 10),
-      account
+      account,
+      userName
     );
     console.log("ProductID: ", typeof product.productId.toString());
   };
