@@ -6,6 +6,16 @@
           "internalType": "uint256",
           "name": "productId",
           "type": "uint256"
+        },
+        {
+          "internalType": "enum ProductInsurance.InsuranceStatus",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
         }
       ],
       "name": "addClaim",
@@ -59,11 +69,6 @@
           "type": "string"
         },
         {
-          "internalType": "string",
-          "name": "productImage",
-          "type": "string"
-        },
-        {
           "internalType": "uint256",
           "name": "productPrice",
           "type": "uint256"
@@ -77,6 +82,11 @@
           "internalType": "address",
           "name": "owner",
           "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "ownername",
+          "type": "string"
         }
       ],
       "name": "addProduct",
@@ -242,11 +252,6 @@
               "type": "string"
             },
             {
-              "internalType": "string",
-              "name": "productImage",
-              "type": "string"
-            },
-            {
               "internalType": "uint256",
               "name": "productPrice",
               "type": "uint256"
@@ -260,6 +265,11 @@
               "internalType": "address",
               "name": "owner",
               "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "ownername",
+              "type": "string"
             },
             {
               "internalType": "string",
@@ -317,11 +327,6 @@
               "type": "string"
             },
             {
-              "internalType": "string",
-              "name": "productImage",
-              "type": "string"
-            },
-            {
               "internalType": "uint256",
               "name": "productPrice",
               "type": "uint256"
@@ -335,6 +340,11 @@
               "internalType": "address",
               "name": "owner",
               "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "ownername",
+              "type": "string"
             },
             {
               "internalType": "string",
@@ -392,11 +402,6 @@
               "type": "string"
             },
             {
-              "internalType": "string",
-              "name": "productImage",
-              "type": "string"
-            },
-            {
               "internalType": "uint256",
               "name": "productPrice",
               "type": "uint256"
@@ -410,6 +415,11 @@
               "internalType": "address",
               "name": "owner",
               "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "ownername",
+              "type": "string"
             },
             {
               "internalType": "string",
@@ -535,11 +545,6 @@
           "type": "string"
         },
         {
-          "internalType": "string",
-          "name": "productImage",
-          "type": "string"
-        },
-        {
           "internalType": "uint256",
           "name": "productPrice",
           "type": "uint256"
@@ -553,6 +558,11 @@
           "internalType": "address",
           "name": "owner",
           "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "ownername",
+          "type": "string"
         },
         {
           "internalType": "string",

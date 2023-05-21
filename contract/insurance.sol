@@ -20,10 +20,10 @@ contract ProductInsurance {
         uint256 id;
         string brand;
         string model;
-        string productImage;
         uint256 productPrice;
         uint256 insurancePrice;
         address owner;
+        string ownername;
         string purchaseDate;
         string startDate;
         string endDate;
@@ -45,7 +45,7 @@ contract ProductInsurance {
     uint256 public productIdCounter;
 
     // function to add product
-    function addProduct(uint256 id, string memory brand, string memory model, string memory productImage, uint256 productPrice,string memory purchaseDate, address owner) public payable {
+    function addProduct(uint256 id, string memory brand, string memory model, uint256 productPrice,string memory purchaseDate, address owner,string memory ownername) public payable {
         require(msg.value == productPrice, "Product price not sent with the function call");
 
         productIdCounter++;
@@ -53,10 +53,10 @@ contract ProductInsurance {
             id: id,
             brand: brand,
             model: model,
-            productImage: productImage,
             productPrice: productPrice,
             insurancePrice: 0,
             owner: owner,
+            ownername: ownername,
             purchaseDate: purchaseDate,
             startDate: "",
             endDate: "",
@@ -96,7 +96,7 @@ contract ProductInsurance {
 
 
     // function to add claim to product
-    function addClaim(uint256 productId) public {
+    function addClaim(uint256 productId, InsuranceStatus status, string memory description) public {
         require(productId <= productIdCounter, "Invalid product ID");
 
         require(hasInsurance[productId], "No insurance found for this product");
@@ -105,7 +105,11 @@ contract ProductInsurance {
 
         require(block.timestamp <= stringToTimestamp(products[productId].endDate), "Product warranty has expired");
 
-        products[productId].insuranceStatus = InsuranceStatus.Claim_Filed;
+        require(status == InsuranceStatus.Under_Investigation || status == InsuranceStatus.Repair,"Ivalid change of status by user");
+
+        products[productId].insuranceStatus = status;
+
+        products[productId].insuranceStatusDescription = description;
 
         hasClaim[productId] = true;
 
