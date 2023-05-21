@@ -5,7 +5,7 @@ import Insurance from "../abis/Insurance.json";
 export const TransactionContext = React.createContext();
 
 export const TransactionProvider = ({ children }) => {
-  const contractAddress = "0xBBf9A41ea3ea463C041dB917653649736F4aE4D2";
+  const contractAddress = "0x39cE020dA261Bc714389ed42f39BEdf6100D22BF";
 
   const [account, setAccount] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
