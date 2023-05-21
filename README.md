@@ -1,3 +1,15 @@
+# ChainSafe - Blockchain Based Insurance Management Web App
+
+### B. Tech Final Year Project - College Of Engineering Chengannur
+
+#### Team Members
+- Aromal S
+- Noel Jose T P
+- Sneha S Kumar
+- Bimal Murali
+#### Project Guide
+- Sreelekshmi K R
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
