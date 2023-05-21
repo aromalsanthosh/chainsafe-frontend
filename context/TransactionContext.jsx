@@ -5,7 +5,7 @@ import Insurance from "../abis/Insurance.json";
 export const TransactionContext = React.createContext();
 
 export const TransactionProvider = ({ children }) => {
-  const contractAddress = "0xA40D9bc8DEfC77B69F5A6F99F879C54B0c8c39FC";
+  const contractAddress = "0x8D23c3Ec5bd8974044A14CFCb4f62076636D7881";
 
   const [account, setAccount] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
@@ -84,7 +84,6 @@ export const TransactionProvider = ({ children }) => {
   }, [account, insuranceContract]);
 
   const addProduct = async (
-    id,
     brand,
     model,
     productImage,
@@ -93,9 +92,12 @@ export const TransactionProvider = ({ children }) => {
     owner
   ) => {
     try {
+      const productCount = await insuranceContract.methods
+        .productIdCounter()
+        .call();
       await insuranceContract.methods
         .addProduct(
-          id,
+          (parseInt(productCount, 10) + 1).toString(),
           brand,
           model,
           productImage,
@@ -103,7 +105,10 @@ export const TransactionProvider = ({ children }) => {
           purchanseDate,
           owner
         )
-        .send({ from: owner, value: productPrice })
+        .send({
+          from: owner,
+          value: productPrice.toString(),
+        })
         .on("receipt", (receipt) => {
           console.log(receipt);
         });

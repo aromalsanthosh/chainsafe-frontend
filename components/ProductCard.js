@@ -4,11 +4,10 @@ import { useContext } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 
 function ProductCard({ product }) {
-  const { addProduct, account  } = useContext(TransactionContext);
-  
+  const { addProduct, account } = useContext(TransactionContext);
+
   const handleBuyNow = () => {
     addProduct(
-      product.productId.toString(),
       product.brand,
       product.model,
       product.image,
@@ -18,9 +17,7 @@ function ProductCard({ product }) {
       account
     );
     console.log("ProductID: ", typeof product.productId.toString());
-    
   };
-      
 
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-md">
@@ -35,8 +32,11 @@ function ProductCard({ product }) {
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2">{product.brand}</div>
         <p className="text-gray-700 text-base mb-2">{product.model}</p>
-        <p className="text-gray-700 text-base font-bold mb-2">{product.price} ETH</p>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <p className="text-gray-700 text-base font-bold mb-2">
+          {product.price} ETH
+        </p>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => handleBuyNow()}
         >
           Buy Now
