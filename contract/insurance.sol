@@ -17,7 +17,7 @@ contract ProductInsurance {
     }
 
     struct Product {
-        string id;
+        uint256 id;
         string brand;
         string model;
         string productImage;
@@ -45,7 +45,7 @@ contract ProductInsurance {
     uint256 public productIdCounter;
 
     // function to add product
-    function addProduct(string memory id, string memory brand, string memory model, string memory productImage, uint256 productPrice,string memory purchaseDate, address owner) public payable {
+    function addProduct(uint256 id, string memory brand, string memory model, string memory productImage, uint256 productPrice,string memory purchaseDate, address owner) public payable {
         require(msg.value == productPrice, "Product price not sent with the function call");
 
         productIdCounter++;
