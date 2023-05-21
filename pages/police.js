@@ -8,14 +8,156 @@ import { Button } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text,  Textarea, Spacer } from "@nextui-org/react";
-
+import { TransactionContext } from "../context/TransactionContext";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { useState } from "react";
+import { useCallback } from "react";
 
 
 
 export default function Police(props) {
+  const { account,getAllClaimsUnderInvestigation , insuranceContract ,updateInsuranceStatusPolice, updateInsuranceStatus } =
+    useContext(TransactionContext);
 
   const { setVisible, bindings } = useModal();
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
+    // enum InsuranceStatus { Valid, Invalid, Replace, Repair, Refund_Approved, Refund_Success, Claim_Filed, Under_Investigation, Claim_Rejected }
+    //Refund_Approved = 4
+  let status = {
+    "7" : "VERIFICATION PENDING",
+    // /REJECTED
+    "8" : "REJECTED",
+    //CLAIM FILED
+    "4" : "APPROVED"
+  }
+
+  let statusColor = {
+    "7" : "warning",
+    // /REJECTED
+    "8" : "error",
+    //CLAIM FILED
+    "6" : "success"
+  }
+
+  
+
+
+
+  const fetchData = useCallback(async () => {
+    try {
+      let claims = await getAllClaimsUnderInvestigation();
+      setProducts(claims);
+      // console.log("Page Loaded");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }, [getAllClaimsUnderInvestigation]);
+  
+  useEffect(() => {
+    fetchData();
+  }, [account, insuranceContract, fetchData]);
+  
+  
+  
+
+  // console.log("Products: ", products);
+
+  const handleApprove = async (product) => {
+    // setSelectedProduct(product);
+    console.log(product);
+    // try {
+    //   await updateInsuranceStatusPolice(product.productId, 4, product.insuranceStatusDescription + " - APPROVED BY POLICE OFFICER");
+    //   // 4 = Refund_Approved
+    //   fetchData();
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+
+    try {
+      let id = product.id;
+      console.log(`Product ID: ${product.productId}`);
+      const response = await updateInsuranceStatusPolice(id, 4, product.insuranceStatusDescription + " - APPROVED BY POLICE OFFICER");
+      console.log("Response: ", response);
+      fetchData();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+  };
+
+  const handleReject = async (product) => {
+    // setSelectedProduct(product);
+    console.log(product);
+    try {
+      await updateInsuranceStatusPolice(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY POLICE OFFICER");
+      // 8 = Rejected
+      fetchData();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
+
+
+
+
+  let sno = 0;
+  const renderCell = (product, columnKey) => {
+    switch (columnKey) {
+      case "sno":
+        return ++sno;
+      case "productName":
+        return `${product.brand} ${product.model}`;
+      case "date":
+        return product.purchaseDate;
+      case "action":
+        return (
+          <Grid.Container gap={1}>
+            <Grid>
+              <Button flat color="primary" auto
+              onPress={() => renderViewModal(product)}>
+                View
+              </Button>
+            </Grid>
+            <Grid>
+              <Button flat color="success" auto
+              onPress={() => handleApprove(product)}>
+                Approve
+              </Button>
+            </Grid>
+            <Grid>
+              <Button flat color="error" auto
+              onPress={() => handleReject(product)}>
+                Reject
+              </Button>
+            </Grid>
+          </Grid.Container>
+        );
+      case "status":
+        return (
+          <Badge isSquared color={statusColor[product.insuranceStatus]} variant="bordered">
+            {status[product.insuranceStatus]}
+          </Badge>
+        );
+      default:
+    }
+  };
+  const columns = [
+    { name: "S.No", uid: "sno" },
+    { name: "PRODUCT ", uid: "productName" },
+    { name: "DATE OF PURCHASE", uid: "date" },
+    { name: "ACTION", uid: "action" },
+    { name: "STATUS", uid: "status" },
+  ];
+
+  const renderViewModal = (product) => {
+    setSelectedProduct(product);
+    setVisible(true);
+  }
 
   return (
     <div>
@@ -41,12 +183,12 @@ export default function Police(props) {
             </Text>
           </Modal.Header>
           <Modal.Body>
-            <Text size="$xl">Product Name : iPhone 13 Pro</Text>
-            <Text size="$xl">Owner Name : Aromal S (0x123243242)</Text>
+            <Text size="$xl">Product Name : {selectedProduct?.brand} {selectedProduct?.model}</Text>
+            <Text size="$xl">Owner Name : {selectedProduct?.ownername} ({selectedProduct?.owner})</Text>
             <Textarea
               readOnly
               label="Case Details"
-              initialValue="FIR NO : 123/2021"
+              initialValue={selectedProduct?.insuranceStatusDescription}
             />
 
           </Modal.Body>
@@ -71,14 +213,12 @@ export default function Police(props) {
           // column
         >
           <Table.Header>
-            <Table.Column>Sl. No</Table.Column>
-            <Table.Column>CASE</Table.Column>
-            <Table.Column>DATE</Table.Column>
-            <Table.Column>ACTION</Table.Column>
-            <Table.Column>STATUS</Table.Column>
+          {columns.map((column) => (
+                <Table.Column key={column.uid}>{column.name}</Table.Column>
+              ))}
           </Table.Header>
           <Table.Body>
-            <Table.Row key="1">
+            {/* <Table.Row key="1">
               <Table.Cell>1</Table.Cell>
               <Table.Cell>MacBook Pro - THEFT FIR : CHN-54/2023</Table.Cell>
               <Table.Cell> 12/12/2021</Table.Cell>
@@ -164,7 +304,20 @@ export default function Police(props) {
                   REJECTED
                 </Badge>
               </Table.Cell>
-            </Table.Row>
+            </Table.Row> */}
+            {
+              products && products.map((product, index) => (
+                <Table.Row key={index}>
+                  {columns.map((column) => (
+                    <Table.Cell key={`${index}-${column.uid}`}>
+                      {renderCell(product, column.uid, index)}
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              ))
+            }
+            
+            
             
           </Table.Body>
         </Table>
