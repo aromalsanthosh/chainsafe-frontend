@@ -13,7 +13,8 @@ function ProductCard({ product }) {
       product.model,
       product.image,
       product.price,
-      new Date().toLocaleDateString("en-GB").replace(/\//g, "-"),
+      // date in YYYY-MM-DD format
+      new Date().toISOString().slice(0, 10),
       account
     );
     console.log("ProductID: ", typeof product.productId.toString());
