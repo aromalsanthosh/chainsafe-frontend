@@ -86,10 +86,10 @@ export const TransactionProvider = ({ children }) => {
   const addProduct = async (
     brand,
     model,
-    productImage,
     productPrice,
     purchanseDate,
-    owner
+    owner,
+    ownername
   ) => {
     try {
       const productCount = await insuranceContract.methods
@@ -100,10 +100,10 @@ export const TransactionProvider = ({ children }) => {
           (parseInt(productCount, 10) + 1).toString(),
           brand,
           model,
-          productImage,
           productPrice,
           purchanseDate,
-          owner
+          owner,
+          ownername
         )
         .send({
           from: owner,
@@ -137,10 +137,10 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
-  const addClaim = async (productId) => {
+  const addClaim = async (productId,status, description) => {
     try {
       await insuranceContract.methods
-        .addClaim(productId)
+        .addClaim(productId, status, description)
         .send({ from: account })
         .on("receipt", (receipt) => {
           console.log(receipt);
@@ -202,6 +202,7 @@ export const TransactionProvider = ({ children }) => {
         .call({ from: account });
 
       console.log("Claims under investigation:", claimsUnderInvestigation);
+      return claimsUnderInvestigation;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -259,6 +260,7 @@ export const TransactionProvider = ({ children }) => {
         getAllClaims,
         getAllClaimsUnderInvestigation,
         sendRefund,
+        updateInsuranceStatusPolice,
       }}
     >
       {children}
