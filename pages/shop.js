@@ -256,7 +256,7 @@ export default function Shop(props) {
               setViewModalVisible(true);
             }}
           >
-            <EyeIcon size={20} fill="#979797" />
+            <EyeIcon size={20} fill="#f72585" />
           </IconButton>
         );
 

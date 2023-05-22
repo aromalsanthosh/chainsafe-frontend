@@ -78,7 +78,7 @@ export default function Products(props) {
                     setVisible(true);
                   }}
                 >
-                  <EyeIcon size={20} fill="#979797" />
+                  <EyeIcon size={20} fill="#7209b7" />
                 </IconButton>
               </Tooltip>
             </Col>
@@ -90,7 +90,7 @@ export default function Products(props) {
                     setEditModalVisible(true);
                   }}
                 >
-                  <EditIcon size={20} fill="#979797" />
+                  <EditIcon size={20} fill="#f72585" />
                 </IconButton>
               </Tooltip>
             </Col>
