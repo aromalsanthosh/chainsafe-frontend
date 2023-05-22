@@ -46,24 +46,14 @@ export const Navbar = () => {
           }   w-full lg:inline-flex lg:flex-grow lg:w-auto`}
         >
           <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto space-x-9">
-            <Link href="/shop">
-              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-black font-medium items-center justify-center hover:text-blue-600">
-                Shop
-              </a>
-            </Link>
-            <Link href="/careers">
-              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-black font-medium items-center justify-center hover:text-blue-600">
-                Careers
-              </a>
-            </Link>
-            <Link href="/about">
-              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-black font-medium items-center justify-center  hover:text-blue-600">
-                About
-              </a>
-            </Link>
-            <Link href="https://github.com/">
-              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-black font-medium items-center justify-center hover:text-blue-600">
+            <Link href="https://github.com/aromalsanthosh/chainsafe-frontend" >
+              <a target="_blank" className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-black font-medium items-center justify-center hover:text-blue-600">
                 Contribute
+              </a>
+            </Link>
+            <Link href="/credits">
+              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-black font-medium items-center justify-center hover:text-blue-600">
+                Credits
               </a>
             </Link>
           </div>
