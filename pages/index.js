@@ -260,32 +260,7 @@ export default function Home() {
             userName={userName}
             accountBalance={accountBalance}
           />
-          <button
-            onClick={async () => {
-              // console.log(insuranceContract.methods);
-              // console.log(Insurance.abi);
-              addProduct(
-                "11",
-                "new t4est account ",
-                "iPhone",
-                "nana",
-                1,
-                "20-10-2022",
-                account
-              );
-              // addInsurance(1, "20-10-2022", "30-12-2025", 5)
-              // getMyProducts();
-            }}
-          >
-            Add Product
-          </button>
-          <button
-            onClick={() => {
-              getMyProducts();
-            }}
-          >
-            Get All Products
-          </button>
+          
         </>
       );
     }
