@@ -7,26 +7,26 @@ const teamMembers = [
   {
     name: 'Aromal S',
     role: 'Full Stack Developer',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis auctor odio a quam commodo, nec maximus metus finibus.',
-    image: 'https://chingizpro.github.io/portfolio/img/person.png', // Add the path to the image file
+    bio: 'Full Stack Web Developer with demonstrated skills in building high-quality websites, specializing in JavaScript and possessing professional experience working with Ruby, Python, Java, and C. Experienced in MERN Stack, Ruby on Rails, and more.',
+    image: 'https://tharang.s3-ap-south-1.amazonaws.com/SquarePic_20220609_22344822.jpg', // Add the path to the image file
   },
   {
     name: 'Noel Jose T P',
     role: 'Frontend Developer',
     bio: 'Sed tincidunt augue eu enim accumsan aliquam. Sed lacinia augue id odio condimentum eleifend.',
-    image: 'https://chingizpro.github.io/portfolio/img/person.png', // Add the path to the image file
+    image: 'https://tharang.s3-ap-south-1.amazonaws.com/1676723520390.jpeg', // Add the path to the image file
   },
   {
     name: 'Sneha S Kunar',
     role: 'Blockchain Developer',
     bio: 'Sed tincidunt augue eu enim accumsan aliquam. Sed lacinia augue id odio condimentum eleifend.',
-    image: 'https://chingizpro.github.io/portfolio/img/person.png', // Add the path to the image file
+    image: 'https://tharang.s3-ap-south-1.amazonaws.com/1655980923916.jpeg', // Add the path to the image file
   },
   {
     name: 'Bimal Murali',
     role: 'UI UX Designer',
     bio: 'Sed tincidunt augue eu enim accumsan aliquam. Sed lacinia augue id odio condimentum eleifend.',
-    image: 'https://chingizpro.github.io/portfolio/img/person.png', // Add the path to the image file
+    image: 'https://tharang.s3-ap-south-1.amazonaws.com/1672034506976.jpeg', // Add the path to the image file
   },
   // Add more team members as needed
 ];
