@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Welcome from "../components/Welcome";
 import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
-import { useState, useEffect, useContext , useCallback} from "react"
+import { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 import { Table } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -12,14 +12,24 @@ import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
 import { TransactionContext } from "../context/TransactionContext";
+import { EyeIcon } from "../components/EyeIcon";
+import { IconButton } from "../components/IconButton";
+import { Card } from "@nextui-org/react";
 
 export default function Shop(props) {
-  const { account, insuranceContract, getMyProducts ,addInsurance, addClaim, updateInsuranceStatusPolice} =
-    useContext(TransactionContext);
+  const {
+    account,
+    insuranceContract,
+    getMyProducts,
+    addInsurance,
+    addClaim,
+    updateInsuranceStatusPolice,
+  } = useContext(TransactionContext);
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [viewProduct, setViewProduct] = useState(null);
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -43,6 +53,9 @@ export default function Shop(props) {
   const { setVisible, bindings } = useModal();
 
   const { setVisible: setClaimModalVisible, bindings: claimModalBindings } =
+    useModal();
+
+  const { setVisible: setViewModalVisible, bindings: viewModalBindings } =
     useModal();
 
   const handleClaimInsurance = () => {
@@ -80,17 +93,15 @@ export default function Shop(props) {
   // 2- ACTIVE => Show Claim Insurance Button
   // all other status => Show Processing Button
 
-  const rendeBuyInsuranceModal = (product,index) => {
+  const rendeBuyInsuranceModal = (product, index) => {
     // SET START DATE AND END DATE TO NULL
     setStartDate(new Date());
     setEndDate(new Date());
     // setSelectedProduct(product);
     // add index to selected product
-    setSelectedProduct({...product,index});
+    setSelectedProduct({ ...product, index });
     setVisible(true);
   };
-
-
 
   const renderClaimInsuranceModal = (product) => {
     setSelectedProduct(product);
@@ -111,13 +122,76 @@ export default function Shop(props) {
     setEndDate(e.target.value);
   };
 
+  const renderModal = (product) => {
+    // console.log("product", product);
+    return (
+      <Modal
+        blur
+        scroll
+        width="600px"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        {...viewModalBindings}
+      >
+        <Modal.Header>
+          <Text id="modal-title" size={27} weight="bold">
+            Product Details
+          </Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Text size="$xl">Brand: {product.brand}</Text>
+          <Text size="$xl">Model: {product.model}</Text>
+          <Text size="$xl">Price: {product.price} ETH</Text>
+          <Text size="$xl">Purchase Date: {product.purchaseDate}</Text>
+          <Text size="$xl">
+            Status:{" "}
+            {
+              <Badge
+                isSquared
+                color={badgeColor[product.insuranceStatus]}
+                variant="bordered"
+              >
+                {status[product.insuranceStatus]}
+              </Badge>
+            }
+          </Text>
+
+          {product.insuranceStatusDescription && (
+            <>
+              <Text size="$xl">Case Details: </Text>
+              <Textarea
+                readOnly
+                label="Case Details"
+                initialValue={product?.insuranceStatusDescription}
+              />
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            auto
+            flat
+            color="error"
+            onPress={() => setViewModalVisible(false)}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   //function that returns button for Insurance column
-  const renderInsuranceButton = (product,index) => {
+  const renderInsuranceButton = (product, index) => {
     let status = parseInt(product.insuranceStatus);
     switch (status) {
       case 0:
         return (
-          <Button auto color="success" onPress={() => renderClaimInsuranceModal(product)}>
+          <Button
+            auto
+            color="success"
+            onPress={() => renderClaimInsuranceModal(product)}
+          >
             Claim Insurance
           </Button>
         );
@@ -126,14 +200,14 @@ export default function Shop(props) {
           <Button
             auto
             color="primary"
-            onPress={() => rendeBuyInsuranceModal(product,index)}
+            onPress={() => rendeBuyInsuranceModal(product, index)}
           >
             Buy Insurance
           </Button>
         );
       default:
         return (
-          <Button auto bordered color="gradient" >
+          <Button auto bordered color="gradient">
             Processing
           </Button>
         );
@@ -149,7 +223,7 @@ export default function Shop(props) {
   //column 5 - Status ( Active / Inactive / Processing / Rejected / Reimbursed / Repaired / Police Verification Pending )
   //use status dictionary to map the product.insuranceStatus to the status
   let sno = 0;
-  const renderCell = (product, columnKey,index) => {
+  const renderCell = (product, columnKey, index) => {
     switch (columnKey) {
       case "sno":
         return ++sno;
@@ -159,7 +233,7 @@ export default function Shop(props) {
         return product.purchaseDate;
       case "insurance":
         // use function to render button
-        return renderInsuranceButton(product,index);
+        return renderInsuranceButton(product, index);
       case "status":
         return (
           <Badge
@@ -170,6 +244,18 @@ export default function Shop(props) {
             {status[product.insuranceStatus]}
           </Badge>
         );
+      case "view":
+        return (
+          <IconButton
+            onClick={() => {
+              setViewProduct(product);
+              setViewModalVisible(true);
+            }}
+          >
+            <EyeIcon size={20} fill="#979797" />
+          </IconButton>
+        );
+
       default:
         return null;
     }
@@ -190,28 +276,20 @@ export default function Shop(props) {
     { name: "PURCHASE DATE", uid: "date" },
     { name: "ACTIONS", uid: "insurance" },
     { name: "INSURANCE STATUS", uid: "status" },
+    { name: "VIEW", uid: "view" },
   ];
 
   const handleInsurancePurchase = async (product) => {
-    
-    console.log('productid',typeof product.id);
+    console.log("productid", typeof product.id);
     // let id = parseInt(product.id);
     try {
-
-      const response = await addInsurance(
-        product.id,
-        startDate,
-        endDate,
-        1
-      );
+      const response = await addInsurance(product.id, startDate, endDate, 1);
       console.log(response);
       setVisible(false);
-      
     } catch (error) {
       console.log(error);
     }
-    
-  }
+  };
 
   //state for case details text area
   const [caseDetails, setCaseDetails] = useState("");
@@ -219,34 +297,26 @@ export default function Shop(props) {
   const [caseType, setCaseType] = useState("1");
   const [insuranceStatus, setInsuranceStatus] = useState(0);
 
-
-
   // useffect to set Insurance Status
   useEffect(() => {
     if (caseType === "1") {
       //Theft - under investigation
-      setInsuranceStatus(7)
+      setInsuranceStatus(7);
     } else if (caseType === "2") {
       //Accident - under investigation
       setInsuranceStatus(7);
-    }
-    else if (caseType === "3") {
+    } else if (caseType === "3") {
       //Repair
       setInsuranceStatus(3);
     }
   }, [caseType]);
-  
 
   const handleInsuranceClaim = async (product) => {
     // console.log("Case Details", caseDetails);
     // console.log("Case Type", caseType);
     console.log("Product ID", product.id);
     try {
-      const response = await addClaim(
-        product.id,
-        insuranceStatus,
-        caseDetails
-      );
+      const response = await addClaim(product.id, insuranceStatus, caseDetails);
       console.log(response);
       //update insurance status to claim filed
       // const updateResponse = await updateInsuranceStatusPolice(
@@ -256,12 +326,10 @@ export default function Shop(props) {
       // );
       // console.log(updateResponse);
       setClaimModalVisible(false);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
-
-  }
+  };
 
   //use effect to calculate the estimated cost
   useEffect(() => {
@@ -275,26 +343,24 @@ export default function Shop(props) {
     //calculate cost according to plan
     switch (plan) {
       case "1":
-        cost = diffDays * 0.0000240;
+        cost = diffDays * 0.000024;
         break;
       case "2":
-        cost = diffDays * 0.0000480;
+        cost = diffDays * 0.000048;
         break;
       case "3":
-        cost = diffDays * 0.0000720;
+        cost = diffDays * 0.000072;
         break;
       default:
-        cost = diffDays * 0.0000240;
+        cost = diffDays * 0.000024;
         break;
     }
     console.log(cost);
     setEstimatedCost(cost);
   }, [startDate, endDate, plan]);
 
-  
-
   const selectPlan = (plan) => {
-    console.log('plan',typeof plan);
+    console.log("plan", typeof plan);
     setPlan(plan);
   };
 
@@ -350,12 +416,16 @@ export default function Shop(props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {activeTab === "all" &&
           productList.map((product) => (
-            <ProductCard key={product.productId} product={product} userName={props.userName} />
+            <ProductCard
+              key={product.productId}
+              product={product}
+              userName={props.userName}
+            />
           ))}
       </div>
       {activeTab === "purchased" && (
         <div className="p-5">
-          
+          {viewProduct && renderModal(viewProduct)}
           <Modal
             blur
             scroll
@@ -378,9 +448,13 @@ export default function Shop(props) {
               </Text>
               <Text size="$xl">
                 {/* show adress like this 0x123...123 */}
-                Owner : {
-                  selectedProduct ? `${props.userName} (${props.account.slice(0, 6)}...${props.account.slice(-4)})` : ""
-                }
+                Owner :{" "}
+                {selectedProduct
+                  ? `${props.userName} (${props.account.slice(
+                      0,
+                      6
+                    )}...${props.account.slice(-4)})`
+                  : ""}
               </Text>
               {/* Start Date Picker */}
               <Text size="$xl">Start Date:</Text>
@@ -403,20 +477,25 @@ export default function Shop(props) {
               {/* Cost per day */}
               {/* <Text size="$xl">Cost per day: 0.0000240 ETH</Text>
                */}
-               <Text size="$xl">Select Plan : </Text>
-              <select className="select select-bordered w-full max-w-xs"
-              onChange={(e) => selectPlan(e.target.value)}
+              <Text size="$xl">Select Plan : </Text>
+              <select
+                className="select select-bordered w-full max-w-xs"
+                onChange={(e) => selectPlan(e.target.value)}
               >
                 <option value="1">BASIC (0.0000240 ETH)</option>
                 <option value="2">STANDARD (0.0000480 ETH)</option>
                 <option value="3">PREMIUM (0.0000720 ETH)</option>
-              </select> 
+              </select>
 
               {/* Estimated Cost */}
               <Text size="$xl">Estimated Cost: {estimatedCost}</Text>
             </Modal.Body>
             <Modal.Footer>
-              <Button auto color="success" onPress={() => handleInsurancePurchase(selectedProduct)}>
+              <Button
+                auto
+                color="success"
+                onPress={() => handleInsurancePurchase(selectedProduct)}
+              >
                 Purchase
               </Button>
               <Button auto color="error" onPress={() => setVisible(false)}>
@@ -439,13 +518,27 @@ export default function Shop(props) {
               </Text>
             </Modal.Header>
             <Modal.Body>
-              <Text size="$xl">Product Name : {selectedProduct ? `${selectedProduct.brand} ${selectedProduct.model}` : ""}</Text>
-              <Text size="$xl">Owner Name : {selectedProduct ? `${props.userName} (${props.account.slice(0, 6)}...${props.account.slice(-4)})` : ""}</Text>
+              <Text size="$xl">
+                Product Name :{" "}
+                {selectedProduct
+                  ? `${selectedProduct.brand} ${selectedProduct.model}`
+                  : ""}
+              </Text>
+              <Text size="$xl">
+                Owner Name :{" "}
+                {selectedProduct
+                  ? `${props.userName} (${props.account.slice(
+                      0,
+                      6
+                    )}...${props.account.slice(-4)})`
+                  : ""}
+              </Text>
               {/* Start Date Picker */}
 
               <Text size="$xl">Select Case : </Text>
-              <select className="select select-bordered w-full max-w-xs"
-              onChange={(e) => setCaseType(e.target.value)}
+              <select
+                className="select select-bordered w-full max-w-xs"
+                onChange={(e) => setCaseType(e.target.value)}
               >
                 <option value="1">THEFT</option>
                 <option value="2">ACCIDENT</option>
