@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Welcome from "../components/Welcome";
 import Wallet from "../components/Wallet";
 import ProductCard from "../components/ProductCard";
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { Table } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -15,6 +15,8 @@ import { TransactionContext } from "../context/TransactionContext";
 import { EyeIcon } from "../components/EyeIcon";
 import { IconButton } from "../components/IconButton";
 import { Card } from "@nextui-org/react";
+import Lottie from "lottie-react-web";
+import animationData from "../public/box.json";
 
 export default function Shop(props) {
   const {
@@ -25,6 +27,8 @@ export default function Shop(props) {
     addClaim,
     updateInsuranceStatusPolice,
   } = useContext(TransactionContext);
+
+  
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
 
@@ -569,31 +573,50 @@ export default function Shop(props) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Table
-            aria-label="Example table with static content"
-            css={{
-              height: "auto",
-              minWidth: "100%",
-            }}
-            // column
-          >
-            <Table.Header>
-              {columns.map((column) => (
-                <Table.Column key={column.uid}>{column.name}</Table.Column>
-              ))}
-            </Table.Header>
-            <Table.Body>
-              {purchasedProducts.map((product, index) => (
-                <Table.Row key={index}>
-                  {columns.map((column) => (
-                    <Table.Cell key={`${index}-${column.uid}`}>
-                      {renderCell(product, column.uid, index)}
-                    </Table.Cell>
-                  ))}
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+          {purchasedProducts.length === 0 ? (
+            //animation
+            <>
+              <div className="flex justify-center items-center">
+                <div className="w-1/6">
+                  <Lottie
+                    options={{
+                      animationData: animationData,
+                    }}
+                  />
+                </div>
+              </div>
+              <Spacer y={1} />
+              <div className="flex justify-center items-center">
+                <h5 className="text-xl ">No Products Purchased</h5>
+              </div>
+            </>
+          ) : (
+            <Table
+              aria-label="Example table with static content"
+              css={{
+                height: "auto",
+                minWidth: "100%",
+              }}
+              // column
+            >
+              <Table.Header>
+                {columns.map((column) => (
+                  <Table.Column key={column.uid}>{column.name}</Table.Column>
+                ))}
+              </Table.Header>
+              <Table.Body>
+                {purchasedProducts.map((product, index) => (
+                  <Table.Row key={index}>
+                    {columns.map((column) => (
+                      <Table.Cell key={`${index}-${column.uid}`}>
+                        {renderCell(product, column.uid, index)}
+                      </Table.Cell>
+                    ))}
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          )}
         </div>
       )}
       <Footer />
