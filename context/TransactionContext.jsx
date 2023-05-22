@@ -190,6 +190,7 @@ export const TransactionProvider = ({ children }) => {
         .call({ from: account });
 
       console.log("Claims:", claims);
+      return claims;
     } catch (error) {
       console.error("Error:", error);
     }
