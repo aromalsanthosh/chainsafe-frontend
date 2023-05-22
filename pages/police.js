@@ -114,16 +114,18 @@ export default function Police(props) {
         return `${product.brand} ${product.model}`;
       case "date":
         return product.purchaseDate;
+      case "owner":
+        return `${product.ownername} (${product.owner.slice(0, 6)}...${product.owner.slice(-4)})`;
       case "action":
         return (
           <Grid.Container gap={1}>
             <Grid>
               <Button flat color="primary" auto
               onPress={() => renderViewModal(product)}>
-                View
+                View Case
               </Button>
             </Grid>
-            <Grid>
+            {/* <Grid>
               <Button flat color="success" auto
               onPress={() => handleApprove(product)}>
                 Approve
@@ -134,7 +136,7 @@ export default function Police(props) {
               onPress={() => handleReject(product)}>
                 Reject
               </Button>
-            </Grid>
+            </Grid> */}
           </Grid.Container>
         );
       case "status":
@@ -150,6 +152,7 @@ export default function Police(props) {
     { name: "S.No", uid: "sno" },
     { name: "PRODUCT ", uid: "productName" },
     { name: "DATE OF PURCHASE", uid: "date" },
+    { name: "OWNER", uid: "owner" },
     { name: "ACTION", uid: "action" },
     { name: "STATUS", uid: "status" },
   ];
@@ -196,10 +199,10 @@ export default function Police(props) {
             <Button auto flat color="error" onPress={() => setVisible(false)}>
               Close
             </Button>
-            <Button auto color="success" onPress={() => setVisible(false)}>
+            <Button auto color="success" onPress={() => handleApprove(selectedProduct)}>
               Approve
             </Button>
-            <Button  auto color="error" onPress={() => setVisible(false)}>
+            <Button  auto color="error" onPress={() => handleReject(selectedProduct)}>
               Reject
             </Button>
           </Modal.Footer>
