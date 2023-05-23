@@ -7,7 +7,7 @@ import ProductCard from "../components/ProductCard";
 import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { Table } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import { Button , Input} from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
@@ -28,7 +28,7 @@ export default function Shop(props) {
     updateInsuranceStatusPolice,
   } = useContext(TransactionContext);
 
-  
+
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
 
@@ -119,6 +119,7 @@ export default function Shop(props) {
   const [estimatedCost, setEstimatedCost] = useState(0);
 
   const handleStartDateChange = (e) => {
+    console.log(e.target.value);
     setStartDate(e.target.value);
   };
 
@@ -400,17 +401,15 @@ export default function Shop(props) {
       {/* tab container */}
       <div className="flex justify-center mb-4 mt-4">
         <button
-          className={`px-4 py-2 rounded-tl-md rounded-bl-md ${
-            activeTab === "all" ? "bg-blue-400 text-white" : ""
-          }`}
+          className={`px-4 py-2 rounded-tl-md rounded-bl-md ${activeTab === "all" ? "bg-blue-400 text-white" : ""
+            }`}
           onClick={() => handleTabChange("all")}
         >
           All Products
         </button>
         <button
-          className={`px-4 py-2 rounded-tr-md rounded-br-md ${
-            activeTab === "purchased" ? "bg-blue-400 text-white" : ""
-          }`}
+          className={`px-4 py-2 rounded-tr-md rounded-br-md ${activeTab === "purchased" ? "bg-blue-400 text-white" : ""
+            }`}
           onClick={() => handleTabChange("purchased")}
         >
           Purchased Products
@@ -455,27 +454,25 @@ export default function Shop(props) {
                 Owner :{" "}
                 {selectedProduct
                   ? `${props.userName} (${props.account.slice(
-                      0,
-                      6
-                    )}...${props.account.slice(-4)})`
+                    0,
+                    6
+                  )}...${props.account.slice(-4)})`
                   : ""}
               </Text>
               {/* Start Date Picker */}
               <Text size="$xl">Start Date:</Text>
-              <input
+              <Input
+                width="186px"
+                label=""
                 type="date"
-                className="input input-bordered"
-                placeholder="Start Date"
-                value={startDate}
                 onChange={handleStartDateChange}
               />
 
               <Text size="$xl">End Date:</Text>
-              <input
+              <Input
+                width="186px"
+                label=""
                 type="date"
-                className="input input-bordered"
-                placeholder="End Date"
-                value={endDate}
                 onChange={handleEndDateChange}
               />
               {/* Cost per day */}
@@ -532,9 +529,9 @@ export default function Shop(props) {
                 Owner Name :{" "}
                 {selectedProduct
                   ? `${props.userName} (${props.account.slice(
-                      0,
-                      6
-                    )}...${props.account.slice(-4)})`
+                    0,
+                    6
+                  )}...${props.account.slice(-4)})`
                   : ""}
               </Text>
               {/* Start Date Picker */}
@@ -597,7 +594,7 @@ export default function Shop(props) {
                 height: "auto",
                 minWidth: "100%",
               }}
-              // column
+            // column
             >
               <Table.Header>
                 {columns.map((column) => (
