@@ -16,6 +16,11 @@
           "internalType": "string",
           "name": "description",
           "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "documentLink",
+          "type": "string"
         }
       ],
       "name": "addClaim",
@@ -295,6 +300,11 @@
               "internalType": "string",
               "name": "insuranceStatusDescription",
               "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "documentLink",
+              "type": "string"
             }
           ],
           "internalType": "struct ProductInsurance.Product[]",
@@ -370,6 +380,11 @@
               "internalType": "string",
               "name": "insuranceStatusDescription",
               "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "documentLink",
+              "type": "string"
             }
           ],
           "internalType": "struct ProductInsurance.Product[]",
@@ -444,6 +459,11 @@
             {
               "internalType": "string",
               "name": "insuranceStatusDescription",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "documentLink",
               "type": "string"
             }
           ],
@@ -587,6 +607,11 @@
         {
           "internalType": "string",
           "name": "insuranceStatusDescription",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "documentLink",
           "type": "string"
         }
       ],

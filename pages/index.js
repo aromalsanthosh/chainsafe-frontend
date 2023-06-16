@@ -18,7 +18,7 @@ import Insurance from "../abis/Insurance.json";
 import { TransactionContext } from "../context/TransactionContext";
 
 export default function Home() {
-  const contractAddress = "0x39cE020dA261Bc714389ed42f39BEdf6100D22BF";
+  const contractAddress = "0x3F0e0367bFc9dF6A461850890eF3f59c79bb1073";
   const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(0);
   const [products, setProducts] = useState([]);
@@ -260,7 +260,6 @@ export default function Home() {
             userName={userName}
             accountBalance={accountBalance}
           />
-          
         </>
       );
     }

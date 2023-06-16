@@ -29,6 +29,7 @@ contract ProductInsurance {
         string endDate;
         InsuranceStatus insuranceStatus;
         string insuranceStatusDescription;
+        string documentLink;
     }
 
     enum InsuranceStatus { Valid, Invalid, Replace, Repair, Refund_Approved, Refund_Success, Claim_Filed, Under_Investigation, Claim_Rejected }
@@ -61,7 +62,8 @@ contract ProductInsurance {
             startDate: "",
             endDate: "",
             insuranceStatus: InsuranceStatus.Invalid,
-            insuranceStatusDescription: ""
+            insuranceStatusDescription: "",
+            documentLink : ""
         });
 
         payable(admin).transfer(msg.value);
@@ -96,7 +98,7 @@ contract ProductInsurance {
 
 
     // function to add claim to product
-    function addClaim(uint256 productId, InsuranceStatus status, string memory description) public {
+    function addClaim(uint256 productId, InsuranceStatus status, string memory description,string memory documentLink) public {
         require(productId <= productIdCounter, "Invalid product ID");
 
         require(hasInsurance[productId], "No insurance found for this product");
@@ -111,6 +113,8 @@ contract ProductInsurance {
 
         products[productId].insuranceStatusDescription = description;
 
+        products[productId].documentLink = documentLink;
+ 
         hasClaim[productId] = true;
 
         emit ClaimAdded(productId);
