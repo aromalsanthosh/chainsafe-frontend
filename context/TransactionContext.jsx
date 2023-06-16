@@ -137,10 +137,10 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
-  const addClaim = async (productId,status, description) => {
+  const addClaim = async (productId, status, description, documentLink) => {
     try {
       await insuranceContract.methods
-        .addClaim(productId, status, description)
+        .addClaim(productId, status, description, documentLink)
         .send({ from: account })
         .on("receipt", (receipt) => {
           console.log(receipt);
