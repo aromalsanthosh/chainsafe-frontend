@@ -4,10 +4,11 @@ import { useContext } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 
 function ProductCard({ product, userName }) {
-  const { addProduct, account } = useContext(TransactionContext);
+  const { addProduct, account ,setLoading} = useContext(TransactionContext);
 
   const handleBuyNow = () => {
-    addProduct(
+    setLoading(true);
+    const response = addProduct(
       product.brand,
       product.model,
       product.price,
@@ -16,6 +17,10 @@ function ProductCard({ product, userName }) {
       account,
       userName
     );
+    response.then((res) => {
+      console.log("res: ", res);
+      setLoading(false);
+    });
     console.log("ProductID: ", typeof product.productId.toString());
   };
 

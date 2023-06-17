@@ -17,7 +17,7 @@ import { useState, useEffect, useCallback, useContext } from "react";
 export default function Admin(props) {
   const router = useRouter();
 
-  const { getAllClaims, account, insuranceContract , updateInsuranceStatus} =
+  const { getAllClaims, account, insuranceContract , updateInsuranceStatus, setLoading} =
     useContext(TransactionContext);
 
   const [products, setProducts] = useState([]);
@@ -155,10 +155,16 @@ export default function Admin(props) {
     // setSelectedProduct(product);
     console.log(product);
     try {
-      await updateInsuranceStatus(product.id, 2, product.insuranceStatusDescription + " - REPLACEMENT APPROVED BY ADMIN OFFICIAL");
+      setLoading(true);
+      const response = await updateInsuranceStatus(product.id, 2, product.insuranceStatusDescription + " - REPLACEMENT APPROVED BY ADMIN OFFICIAL");
       // 2 = Replace
+      response.then((res) => {
+        console.log("Response: ", res);
+        setLoading(false);
+      });
       fetchData();
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   }
@@ -166,8 +172,13 @@ export default function Admin(props) {
     // setSelectedProduct(product);
     console.log(product);
     try {
-      await updateInsuranceStatus(product.id, 5, product.insuranceStatusDescription + " - REFUND DONE BY ADMIN OFFICIAL");
+      setLoading(true);
+      const response = await updateInsuranceStatus(product.id, 5, product.insuranceStatusDescription + " - REFUND DONE BY ADMIN OFFICIAL");
       // 5 = Refund Approved
+      response.then((res) => {
+        console.log("Response: ", res);
+        setLoading(false);
+      });
       fetchData();
     } catch (error) {
       console.error("Error:", error);
@@ -177,8 +188,13 @@ export default function Admin(props) {
     // setSelectedProduct(product);
     console.log(product);
     try {
-      await updateInsuranceStatus(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY ADMIN OFFICIAL");
+      setLoading(true);
+      const response = await updateInsuranceStatus(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY ADMIN OFFICIAL");
       // 8 = Rejected
+      response.then((res) => {
+        console.log("Response: ", res);
+        setLoading(false);
+      });
       fetchData();
     } catch (error) {
       console.error("Error:", error);
@@ -232,6 +248,16 @@ export default function Admin(props) {
               Owner Name : {selectedProduct?.ownername} (
               {selectedProduct?.owner})
             </Text>
+            <Button
+            auto
+            flat
+            color="primary"
+            onPress={() => {
+              window.open(selectedProduct.documentLink);
+            }}
+          >
+            View Supporting Document
+          </Button>
             <Textarea
               readOnly
               label="Case Details"

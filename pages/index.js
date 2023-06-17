@@ -14,6 +14,10 @@ import Shop from "./shop";
 import Police from "./police";
 import Admin from "./admin";
 
+import Lottie from "lottie-react-web";
+import animationData from "../public/box.json";
+import loadingAnimation from "../public/block.json";
+
 import Insurance from "../abis/Insurance.json";
 import { TransactionContext } from "../context/TransactionContext";
 
@@ -22,7 +26,7 @@ export default function Home() {
   const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(0);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [accountBalance, setAccountBalance] = useState(0);
   const [sellerAccount, setSellerAccount] = useState(
     "0x8491106BA7C7806577E216f8560E9f3d9eCC5ecd"
@@ -34,7 +38,7 @@ export default function Home() {
   const [userName, setUserName] = useState("");
   const [insuranceContract, setInsuranceContract] = useState(null);
 
-  const { addProduct } = useContext(TransactionContext);
+  const { addProduct, loading, setLoading } = useContext(TransactionContext);
 
   useEffect(() => {
     const load = async () => {
@@ -275,53 +279,72 @@ export default function Home() {
     <div>
       {/* <p>Connected Account: {account}</p>
       <p>Account Balance: {accountBalance}</p> */}
-      {account ? (
-        <>{renderContent()}</>
-      ) : (
-        <div>
-          <Head>
-            <title>ChainSafe | Home Page</title>
-            <meta
-              name="viewport"
-              content="initial-scale=1.0, width=device-width"
-            />
-          </Head>
-          <Navbar />
-          <div className="hero min-h-screen bg-base-200">
-            <div className="hero min-h-screen bg-base-200 ">
-              <div className="flex-col hero-content lg:flex-row-reverse  p-0 w-screen ">
-                <img
-                  src="/homepage.png"
-                  className=" md:mb-5 md:basis-1/2 md:w-1/4"
-                />
-                <div className="px-12 py-6 md:basis-1/2 md:w-2/4 w-96 md:p-24 ">
-                  <h1 className=" text-2xl text-left mb-5 md:text-4xl font-bold ">
-                    Revolutionize Your <br></br>
-                    Insurance Management <br></br>
-                    with Blockchain
-                  </h1>
-                  <p className="mb-5">
-                    Maximize Your Insurance Management <br></br>
-                    with the Power of Blockchain
-                  </p>
-                  {/* <Link href="/"> */}
-                  <button
-                    id="#connectwallet"
-                    className="md:mr-6 mb-6 md:w-44 w-full btn btn-primary px-8 bg-primary normal-case font-normal rounded-none"
-                    onClick={async () => {
-                      await loadWeb3();
-                      await getAccountAndBalance(setAccount, setAccountBalance);
-                      await loadBlockchainData();
-                    }}
-                  >
-                    Connect Wallet
-                  </button>
-                </div>
-              </div>
+      {loading ? (
+        <>
+          <div className="flex justify-center items-center h-screen">
+            <div className="w-1/6">
+              <Lottie
+                options={{
+                  animationData: loadingAnimation,
+                }}
+              />
             </div>
           </div>
-          <Footer />
-        </div>
+        </>
+      ) : (
+        <>
+          {account ? (
+            <>{renderContent()}</>
+          ) : (
+            <div>
+              <Head>
+                <title>ChainSafe | Home Page</title>
+                <meta
+                  name="viewport"
+                  content="initial-scale=1.0, width=device-width"
+                />
+              </Head>
+              <Navbar />
+              <div className="hero min-h-screen bg-base-200">
+                <div className="hero min-h-screen bg-base-200 ">
+                  <div className="flex-col hero-content lg:flex-row-reverse  p-0 w-screen ">
+                    <img
+                      src="/homepage.png"
+                      className=" md:mb-5 md:basis-1/2 md:w-1/4"
+                    />
+                    <div className="px-12 py-6 md:basis-1/2 md:w-2/4 w-96 md:p-24 ">
+                      <h1 className=" text-2xl text-left mb-5 md:text-4xl font-bold ">
+                        Revolutionize Your <br></br>
+                        Insurance Management <br></br>
+                        with Blockchain
+                      </h1>
+                      <p className="mb-5">
+                        Maximize Your Insurance Management <br></br>
+                        with the Power of Blockchain
+                      </p>
+                      {/* <Link href="/"> */}
+                      <button
+                        id="#connectwallet"
+                        className="md:mr-6 mb-6 md:w-44 w-full btn btn-primary px-8 bg-primary normal-case font-normal rounded-none"
+                        onClick={async () => {
+                          await loadWeb3();
+                          await getAccountAndBalance(
+                            setAccount,
+                            setAccountBalance
+                          );
+                          await loadBlockchainData();
+                        }}
+                      >
+                        Connect Wallet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Footer />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

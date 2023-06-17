@@ -17,7 +17,7 @@ import { useCallback } from "react";
 
 
 export default function Police(props) {
-  const { account,getAllClaimsUnderInvestigation , insuranceContract ,updateInsuranceStatusPolice, updateInsuranceStatus } =
+  const { account,getAllClaimsUnderInvestigation , insuranceContract ,updateInsuranceStatusPolice, updateInsuranceStatus, setLoading } =
     useContext(TransactionContext);
 
   const { setVisible, bindings } = useModal();
@@ -77,12 +77,21 @@ export default function Police(props) {
     // }
 
     try {
+
       let id = product.id;
-      console.log(`Product ID: ${product.productId}`);
+      setLoading(true);
+      // console.log(`Product ID: ${product.productId}`);
       const response = await updateInsuranceStatusPolice(id, 4, product.insuranceStatusDescription + " - APPROVED BY POLICE OFFICER");
-      console.log("Response: ", response);
+      // console.log("Response: ", response);
+      response.then((res) => {
+        console.log("res: ", res);
+        setLoading(false);
+        setVisible(false);
+      });
       fetchData();
     } catch (error) {
+      setVisible(false);
+      setLoading(false);
       console.error("Error:", error);
     }
 
@@ -92,10 +101,18 @@ export default function Police(props) {
     // setSelectedProduct(product);
     console.log(product);
     try {
-      await updateInsuranceStatusPolice(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY POLICE OFFICER");
+      setLoading(true);
+      const response = await updateInsuranceStatusPolice(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY POLICE OFFICER");
       // 8 = Rejected
+      response.then((res) => {
+        console.log("res: ", res);
+        setLoading(false);
+        setVisible(false);
+      });
       fetchData();
     } catch (error) {
+      setVisible(false);
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -188,11 +205,22 @@ export default function Police(props) {
           <Modal.Body>
             <Text size="$xl">Product Name : {selectedProduct?.brand} {selectedProduct?.model}</Text>
             <Text size="$xl">Owner Name : {selectedProduct?.ownername} ({selectedProduct?.owner})</Text>
+            <Button
+            auto
+            flat
+            color="primary"
+            onPress={() => {
+              window.open(selectedProduct.documentLink);
+            }}
+          >
+            View Supporting Document
+          </Button>
             <Textarea
               readOnly
               label="Case Details"
               initialValue={selectedProduct?.insuranceStatusDescription}
             />
+
 
           </Modal.Body>
           <Modal.Footer>
