@@ -188,11 +188,22 @@ export default function Police(props) {
           <Modal.Body>
             <Text size="$xl">Product Name : {selectedProduct?.brand} {selectedProduct?.model}</Text>
             <Text size="$xl">Owner Name : {selectedProduct?.ownername} ({selectedProduct?.owner})</Text>
+            <Button
+            auto
+            flat
+            color="primary"
+            onPress={() => {
+              window.open(selectedProduct.documentLink);
+            }}
+          >
+            View Supporting Document
+          </Button>
             <Textarea
               readOnly
               label="Case Details"
               initialValue={selectedProduct?.insuranceStatusDescription}
             />
+
 
           </Modal.Body>
           <Modal.Footer>

@@ -7,16 +7,25 @@ import ProductCard from "../components/ProductCard";
 import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { Table } from "@nextui-org/react";
-import { Button , Input} from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
 import { TransactionContext } from "../context/TransactionContext";
 import { EyeIcon } from "../components/EyeIcon";
 import { IconButton } from "../components/IconButton";
-import { Card } from "@nextui-org/react";
 import Lottie from "lottie-react-web";
 import animationData from "../public/box.json";
+
+import AWS from "aws-sdk";
+
+AWS.config.update({
+  accessKeyId: "AKIAYV7OX7LXA6NA3OKG",
+  secretAccessKey: "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",
+  region: "ap-south-1",
+});
+
+const s3 = new AWS.S3();
 
 export default function Shop(props) {
   const {
@@ -28,9 +37,28 @@ export default function Shop(props) {
     updateInsuranceStatusPolice,
   } = useContext(TransactionContext);
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileLink, setFileLink] = useState("");
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const handleFileUpload = async () => {
+    const params = {
+      Bucket: "chainsafe-data",
+      Key: `${props.userName}-${new Date().toISOString()}-${selectedFile.name}`,
+      Body: selectedFile,
+    };
+    const res = await s3.upload(params).promise();
+    setFileLink(res.Location);
+    console.log(`File uploaded successfully at ${res.Location}`);
+  };
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
+
+  const isEmpty = !Array.isArray(purchasedProducts) || purchasedProducts.length === 0;
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [viewProduct, setViewProduct] = useState(null);
@@ -92,10 +120,6 @@ export default function Shop(props) {
     8: "error",
   };
 
-  // In third column, we need to show the status of the product
-  // 1- INACTIVE => Show Buy Insurance Button
-  // 2- ACTIVE => Show Claim Insurance Button
-  // all other status => Show Processing Button
 
   const rendeBuyInsuranceModal = (product, index) => {
     // SET START DATE AND END DATE TO NULL
@@ -108,6 +132,8 @@ export default function Shop(props) {
   };
 
   const renderClaimInsuranceModal = (product) => {
+    setFileLink("");
+    setSelectedFile(null);
     setSelectedProduct(product);
     setClaimModalVisible(true);
   };
@@ -146,7 +172,7 @@ export default function Shop(props) {
         <Modal.Body>
           <Text size="$xl">Brand: {product.brand}</Text>
           <Text size="$xl">Model: {product.model}</Text>
-          <Text size="$xl">Price: {product.price} ETH</Text>
+
           <Text size="$xl">Purchase Date: {product.purchaseDate}</Text>
           <Text size="$xl">
             Status:{" "}
@@ -160,10 +186,23 @@ export default function Shop(props) {
               </Badge>
             }
           </Text>
+          {/* if status greater than 2 */}
+          {product.insuranceStatus > 2 && (
+          <Button
+          auto
+          flat
+          color="primary"
+          onPress={() => {
+            window.open(product.documentLink);
+          }}
+        >
+          View Supporting Document
+        </Button>
+          )}
+
 
           {product.insuranceStatusDescription && (
             <>
-              <Text size="$xl">Case Details: </Text>
               <Textarea
                 readOnly
                 label="Case Details"
@@ -321,7 +360,12 @@ export default function Shop(props) {
     // console.log("Case Type", caseType);
     console.log("Product ID", product.id);
     try {
-      const response = await addClaim(product.id, insuranceStatus, caseDetails);
+      const response = await addClaim(
+        product.id,
+        insuranceStatus,
+        caseDetails,
+        fileLink
+      );
       console.log(response);
       //update insurance status to claim filed
       // const updateResponse = await updateInsuranceStatusPolice(
@@ -401,15 +445,17 @@ export default function Shop(props) {
       {/* tab container */}
       <div className="flex justify-center mb-4 mt-4">
         <button
-          className={`px-4 py-2 rounded-tl-md rounded-bl-md ${activeTab === "all" ? "bg-blue-400 text-white" : ""
-            }`}
+          className={`px-4 py-2 rounded-tl-md rounded-bl-md ${
+            activeTab === "all" ? "bg-blue-400 text-white" : ""
+          }`}
           onClick={() => handleTabChange("all")}
         >
           All Products
         </button>
         <button
-          className={`px-4 py-2 rounded-tr-md rounded-br-md ${activeTab === "purchased" ? "bg-blue-400 text-white" : ""
-            }`}
+          className={`px-4 py-2 rounded-tr-md rounded-br-md ${
+            activeTab === "purchased" ? "bg-blue-400 text-white" : ""
+          }`}
           onClick={() => handleTabChange("purchased")}
         >
           Purchased Products
@@ -454,9 +500,9 @@ export default function Shop(props) {
                 Owner :{" "}
                 {selectedProduct
                   ? `${props.userName} (${props.account.slice(
-                    0,
-                    6
-                  )}...${props.account.slice(-4)})`
+                      0,
+                      6
+                    )}...${props.account.slice(-4)})`
                   : ""}
               </Text>
               {/* Start Date Picker */}
@@ -529,9 +575,9 @@ export default function Shop(props) {
                 Owner Name :{" "}
                 {selectedProduct
                   ? `${props.userName} (${props.account.slice(
-                    0,
-                    6
-                  )}...${props.account.slice(-4)})`
+                      0,
+                      6
+                    )}...${props.account.slice(-4)})`
                   : ""}
               </Text>
               {/* Start Date Picker */}
@@ -545,6 +591,36 @@ export default function Shop(props) {
                 <option value="2">ACCIDENT</option>
                 <option value="3">NOT WORKING</option>
               </select>
+
+              {/* File Upload */}
+              {!selectedFile && (
+                <>
+                  <Text size="$xl">Select File : </Text>
+                  <input
+                    type="file"
+                    className=" px-4 border border-gray-300 rounded-md"
+                    onChange={handleFileChange}
+                  />
+                </>
+              )}
+              {selectedFile && (
+                <>
+                  <p className="mt-2 text-gray-600">
+                    Selected file: {selectedFile.name}
+                  </p>
+                  <button
+                    className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={handleFileUpload}
+                  >
+                    Upload File
+                  </button>
+                </>
+              )}
+              {fileLink && (
+                <p className="mt-2 text-green-600">
+                  File uploaded! Link: <a href={fileLink}>{fileLink}</a>
+                </p>
+              )}
 
               <Textarea
                 label="Case Details : "
@@ -570,8 +646,7 @@ export default function Shop(props) {
               </Button>
             </Modal.Footer>
           </Modal>
-          {purchasedProducts.length === 0 ? (
-            //animation
+          {isEmpty ? (
             <>
               <div className="flex justify-center items-center">
                 <div className="w-1/6">
@@ -594,7 +669,7 @@ export default function Shop(props) {
                 height: "auto",
                 minWidth: "100%",
               }}
-            // column
+              // column
             >
               <Table.Header>
                 {columns.map((column) => (
