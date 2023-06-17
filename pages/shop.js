@@ -7,7 +7,7 @@ import ProductCard from "../components/ProductCard";
 import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { Table } from "@nextui-org/react";
-import { Button , Input} from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
 import { Badge } from "@nextui-org/react";
 import { Modal, useModal, Text, Textarea, Spacer } from "@nextui-org/react";
@@ -17,6 +17,20 @@ import { IconButton } from "../components/IconButton";
 import { Card } from "@nextui-org/react";
 import Lottie from "lottie-react-web";
 import animationData from "../public/box.json";
+
+import AWS from 'aws-sdk';
+
+
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+
+const s3 = new AWS.S3();
+
+
 
 export default function Shop(props) {
   const {
@@ -28,7 +42,26 @@ export default function Shop(props) {
     updateInsuranceStatusPolice,
   } = useContext(TransactionContext);
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileLink, setFileLink] = useState('');
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const handleFileUpload = async () => {
+    const params = {
+      Bucket: 'chainsafe-data',
+      Key: selectedFile.name,
+      Body: selectedFile,
+    };
+    const res = await s3.upload(params).promise();
+    setFileLink(res.Location);
+    console.log(`File uploaded successfully at ${res.Location}`);
+
+    
+  };
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
 
@@ -401,15 +434,17 @@ export default function Shop(props) {
       {/* tab container */}
       <div className="flex justify-center mb-4 mt-4">
         <button
-          className={`px-4 py-2 rounded-tl-md rounded-bl-md ${activeTab === "all" ? "bg-blue-400 text-white" : ""
-            }`}
+          className={`px-4 py-2 rounded-tl-md rounded-bl-md ${
+            activeTab === "all" ? "bg-blue-400 text-white" : ""
+          }`}
           onClick={() => handleTabChange("all")}
         >
           All Products
         </button>
         <button
-          className={`px-4 py-2 rounded-tr-md rounded-br-md ${activeTab === "purchased" ? "bg-blue-400 text-white" : ""
-            }`}
+          className={`px-4 py-2 rounded-tr-md rounded-br-md ${
+            activeTab === "purchased" ? "bg-blue-400 text-white" : ""
+          }`}
           onClick={() => handleTabChange("purchased")}
         >
           Purchased Products
@@ -454,9 +489,9 @@ export default function Shop(props) {
                 Owner :{" "}
                 {selectedProduct
                   ? `${props.userName} (${props.account.slice(
-                    0,
-                    6
-                  )}...${props.account.slice(-4)})`
+                      0,
+                      6
+                    )}...${props.account.slice(-4)})`
                   : ""}
               </Text>
               {/* Start Date Picker */}
@@ -529,9 +564,9 @@ export default function Shop(props) {
                 Owner Name :{" "}
                 {selectedProduct
                   ? `${props.userName} (${props.account.slice(
-                    0,
-                    6
-                  )}...${props.account.slice(-4)})`
+                      0,
+                      6
+                    )}...${props.account.slice(-4)})`
                   : ""}
               </Text>
               {/* Start Date Picker */}
@@ -545,6 +580,32 @@ export default function Shop(props) {
                 <option value="2">ACCIDENT</option>
                 <option value="3">NOT WORKING</option>
               </select>
+
+              {/* File Upload */}
+              <Text size="$xl">Select File : </Text>
+              <input
+        type="file"
+        className="py-2 px-4 border border-gray-300 rounded-md"
+        onChange={handleFileChange}
+      />
+      {selectedFile && (
+        <>
+          <p className="mt-2 text-gray-600">
+            Selected file: {selectedFile.name}
+          </p>
+          <button
+            className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={handleFileUpload}
+          >
+            Upload File
+          </button>
+        </>
+      )}
+      {fileLink && (
+        <p className="mt-2 text-green-600">
+          File uploaded! Link: <a href={fileLink}>{fileLink}</a>
+        </p>
+      )}
 
               <Textarea
                 label="Case Details : "
@@ -594,7 +655,7 @@ export default function Shop(props) {
                 height: "auto",
                 minWidth: "100%",
               }}
-            // column
+              // column
             >
               <Table.Header>
                 {columns.map((column) => (
