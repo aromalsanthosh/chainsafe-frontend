@@ -188,6 +188,7 @@ export default function Admin(props) {
     // setSelectedProduct(product);
     console.log(product);
     try {
+      setLoading(true);
       const response = await updateInsuranceStatus(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY ADMIN OFFICIAL");
       // 8 = Rejected
       response.then((res) => {
