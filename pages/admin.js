@@ -232,6 +232,16 @@ export default function Admin(props) {
               Owner Name : {selectedProduct?.ownername} (
               {selectedProduct?.owner})
             </Text>
+            <Button
+            auto
+            flat
+            color="primary"
+            onPress={() => {
+              window.open(selectedProduct.documentLink);
+            }}
+          >
+            View Supporting Document
+          </Button>
             <Textarea
               readOnly
               label="Case Details"
