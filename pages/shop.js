@@ -35,6 +35,8 @@ export default function Shop(props) {
     addInsurance,
     addClaim,
     updateInsuranceStatusPolice,
+    loading,
+    setLoading,
   } = useContext(TransactionContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -327,10 +329,19 @@ export default function Shop(props) {
     console.log("productid", typeof product.id);
     // let id = parseInt(product.id);
     try {
+      setLoading(true);
       const response = await addInsurance(product.id, startDate, endDate, 1);
-      console.log(response);
-      setVisible(false);
+      // console.log(response);
+      // setVisible(false);
+      // setLoading(false);
+      response.then((res) => {
+        console.log(res);
+        setVisible(false);
+        setLoading(false);
+      });
+      fetchProducts();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -360,13 +371,20 @@ export default function Shop(props) {
     // console.log("Case Type", caseType);
     console.log("Product ID", product.id);
     try {
+      setLoading(true);
       const response = await addClaim(
         product.id,
         insuranceStatus,
         caseDetails,
         fileLink
       );
-      console.log(response);
+      response.then((res) => {
+        console.log(res);
+        setClaimModalVisible(false);
+        setLoading(false);
+        fetchProducts();
+      });
+      
       //update insurance status to claim filed
       // const updateResponse = await updateInsuranceStatusPolice(
       //   product.id,
@@ -376,6 +394,8 @@ export default function Shop(props) {
       // console.log(updateResponse);
       setClaimModalVisible(false);
     } catch (error) {
+      setLoading(false);
+      setClaimModalVisible(false);
       console.log(error);
     }
   };

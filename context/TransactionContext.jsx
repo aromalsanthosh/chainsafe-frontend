@@ -7,6 +7,9 @@ export const TransactionContext = React.createContext();
 export const TransactionProvider = ({ children }) => {
   const contractAddress = "0x3F0e0367bFc9dF6A461850890eF3f59c79bb1073";
 
+  //loading state
+  const [loading, setLoading] = useState(false);
+
   const [account, setAccount] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
   const [insuranceContract, setInsuranceContract] = useState(null);
@@ -262,6 +265,8 @@ export const TransactionProvider = ({ children }) => {
         getAllClaimsUnderInvestigation,
         sendRefund,
         updateInsuranceStatusPolice,
+        setLoading,
+        loading,
       }}
     >
       {children}
