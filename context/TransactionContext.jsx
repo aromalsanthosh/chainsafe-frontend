@@ -103,14 +103,14 @@ export const TransactionProvider = ({ children }) => {
           (parseInt(productCount, 10) + 1).toString(),
           brand,
           model,
-          productPrice,
+          web3.utils.toWei(productPrice.toString(), "ether"),
           purchanseDate,
           owner,
           ownername
         )
         .send({
           from: owner,
-          value: productPrice.toString(),
+          value: web3.utils.toWei(productPrice.toString(), "ether"),
         })
         .on("receipt", (receipt) => {
           console.log(receipt);
@@ -128,8 +128,16 @@ export const TransactionProvider = ({ children }) => {
   ) => {
     try {
       await insuranceContract.methods
-        .addInsurance(productId, startDate, endDate, insurancePrice)
-        .send({ from: account, value: insurancePrice })
+        .addInsurance(
+          productId,
+          startDate,
+          endDate,
+          web3.utils.toWei(insurancePrice.toString(), "ether")
+        )
+        .send({
+          from: account,
+          value: web3.utils.toWei(insurancePrice.toString(), "ether"),
+        })
         .on("receipt", (receipt) => {
           console.log(receipt);
         });
