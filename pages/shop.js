@@ -536,6 +536,8 @@ export default function Shop(props) {
                 label=""
                 type="date"
                 onChange={handleStartDateChange}
+                disabled
+                value={selectedProduct.purchaseDate}
               />
 
               <Text size="$xl">End Date:</Text>
