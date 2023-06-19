@@ -331,7 +331,7 @@ export default function Shop(props) {
       setLoading(true);
       const response = await addInsurance(
         product.id,
-        startDate,
+        product.purchaseDate,
         endDate,
         estimatedCost
       );
