@@ -60,7 +60,8 @@ export default function Shop(props) {
 
   const [purchasedProducts, setPurchasedProducts] = useState([]);
 
-  const isEmpty = !Array.isArray(purchasedProducts) || purchasedProducts.length === 0;
+  const isEmpty =
+    !Array.isArray(purchasedProducts) || purchasedProducts.length === 0;
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [viewProduct, setViewProduct] = useState(null);
@@ -121,7 +122,6 @@ export default function Shop(props) {
     7: "warning",
     8: "error",
   };
-
 
   const rendeBuyInsuranceModal = (product, index) => {
     // SET START DATE AND END DATE TO NULL
@@ -190,18 +190,17 @@ export default function Shop(props) {
           </Text>
           {/* if status greater than 2 */}
           {product.insuranceStatus > 2 && (
-          <Button
-          auto
-          flat
-          color="primary"
-          onPress={() => {
-            window.open(product.documentLink);
-          }}
-        >
-          View Supporting Document
-        </Button>
+            <Button
+              auto
+              flat
+              color="primary"
+              onPress={() => {
+                window.open(product.documentLink);
+              }}
+            >
+              View Supporting Document
+            </Button>
           )}
-
 
           {product.insuranceStatusDescription && (
             <>
@@ -330,7 +329,12 @@ export default function Shop(props) {
     // let id = parseInt(product.id);
     try {
       setLoading(true);
-      const response = await addInsurance(product.id, startDate, endDate, 1);
+      const response = await addInsurance(
+        product.id,
+        startDate,
+        endDate,
+        estimatedCost
+      );
       // console.log(response);
       // setVisible(false);
       // setLoading(false);
@@ -384,7 +388,7 @@ export default function Shop(props) {
         setLoading(false);
         fetchProducts();
       });
-      
+
       //update insurance status to claim filed
       // const updateResponse = await updateInsuranceStatusPolice(
       //   product.id,
