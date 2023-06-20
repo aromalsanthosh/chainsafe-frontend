@@ -17,8 +17,14 @@ import { useState, useEffect, useCallback, useContext } from "react";
 export default function Admin(props) {
   const router = useRouter();
 
-  const { getAllClaims, account, insuranceContract , updateInsuranceStatus, setLoading} =
-    useContext(TransactionContext);
+  const {
+    getAllClaims,
+    account,
+    insuranceContract,
+    updateInsuranceStatus,
+    setLoading,
+    sendRefund,
+  } = useContext(TransactionContext);
 
   const [products, setProducts] = useState([]);
 
@@ -156,7 +162,12 @@ export default function Admin(props) {
     console.log(product);
     try {
       setLoading(true);
-      const response = await updateInsuranceStatus(product.id, 2, product.insuranceStatusDescription + " - REPLACEMENT APPROVED BY ADMIN OFFICIAL");
+      const response = await updateInsuranceStatus(
+        product.id,
+        2,
+        product.insuranceStatusDescription +
+          " - REPLACEMENT APPROVED BY ADMIN OFFICIAL"
+      );
       // 2 = Replace
       response.then((res) => {
         console.log("Response: ", res);
@@ -167,13 +178,13 @@ export default function Admin(props) {
       setLoading(false);
       console.error("Error:", error);
     }
-  }
+  };
   const handleRefundApproval = async (product) => {
     // setSelectedProduct(product);
     console.log(product);
     try {
       setLoading(true);
-      const response = await updateInsuranceStatus(product.id, 5, product.insuranceStatusDescription + " - REFUND DONE BY ADMIN OFFICIAL");
+      const response = await sendRefund(product.id, product.productPrice);
       // 5 = Refund Approved
       response.then((res) => {
         console.log("Response: ", res);
@@ -189,7 +200,11 @@ export default function Admin(props) {
     console.log(product);
     try {
       setLoading(true);
-      const response = await updateInsuranceStatus(product.id, 8, product.insuranceStatusDescription + " - REJECTED BY ADMIN OFFICIAL");
+      const response = await updateInsuranceStatus(
+        product.id,
+        8,
+        product.insuranceStatusDescription + " - REJECTED BY ADMIN OFFICIAL"
+      );
       // 8 = Rejected
       response.then((res) => {
         console.log("Response: ", res);
@@ -249,15 +264,15 @@ export default function Admin(props) {
               {selectedProduct?.owner})
             </Text>
             <Button
-            auto
-            flat
-            color="primary"
-            onPress={() => {
-              window.open(selectedProduct.documentLink);
-            }}
-          >
-            View Supporting Document
-          </Button>
+              auto
+              flat
+              color="primary"
+              onPress={() => {
+                window.open(selectedProduct.documentLink);
+              }}
+            >
+              View Supporting Document
+            </Button>
             <Textarea
               readOnly
               label="Case Details"
@@ -315,7 +330,10 @@ export default function Admin(props) {
                 selectedProduct?.insuranceStatus === "5" ||
                 selectedProduct?.insuranceStatus === "2"
               }
-             auto color="error" onPress={() => handleReject(selectedProduct)}>
+              auto
+              color="error"
+              onPress={() => handleReject(selectedProduct)}
+            >
               Reject
             </Button>
           </Modal.Footer>

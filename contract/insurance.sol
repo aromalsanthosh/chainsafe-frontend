@@ -273,6 +273,8 @@ contract ProductInsurance {
         owner.transfer(msg.value);
 
         products[productId].insuranceStatus = InsuranceStatus.Refund_Success;
+        string memory desc = products[productId].insuranceStatusDescription;
+        products[productId].insuranceStatusDescription = string.concat(desc,"- REFUND DONE BY ADMIN OFFICIAL");
         emit InsuranceStatusUpdated(productId, InsuranceStatus.Refund_Success, "Product price refunded to owner");
     }
 
