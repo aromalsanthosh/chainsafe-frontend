@@ -331,7 +331,7 @@ export default function Shop(props) {
       setLoading(true);
       const response = await addInsurance(
         product.id,
-        startDate,
+        product.purchaseDate,
         endDate,
         estimatedCost
       );
@@ -536,6 +536,8 @@ export default function Shop(props) {
                 label=""
                 type="date"
                 onChange={handleStartDateChange}
+                disabled
+                value={selectedProduct?.purchaseDate}
               />
 
               <Text size="$xl">End Date:</Text>
