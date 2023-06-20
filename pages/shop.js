@@ -20,8 +20,8 @@ import animationData from "../public/box.json";
 import AWS from "aws-sdk";
 
 AWS.config.update({
-  accessKeyId: "AKIAYV7OX7LXA6NA3OKG",
-  secretAccessKey: "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",
+  accessKeyId: "AKIAYV7OX7LXC2WECLE6",
+  secretAccessKey: "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",
   region: "ap-south-1",
 });
 
