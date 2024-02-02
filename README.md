@@ -2,6 +2,10 @@
 
 ### B. Tech Final Year Project - College Of Engineering Chengannur
 
+⚠️ Live Deployment is currently not functional due to expired hosting plan
+
+#### [Project Report](/Project_Report__Final_Version_.pdf) | [Project Presentation](/ChainSafe-Presentation.pdf)
+
 #### Team Members
 - Aromal S
 - Noel Jose T P
